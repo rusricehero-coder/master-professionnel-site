@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rusricehero-coder.github.io/master-professionnel-site/sitemap.xml

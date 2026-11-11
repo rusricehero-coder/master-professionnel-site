@@ -14,6 +14,7 @@ const avisData = JSON.parse(readFileSync(join(ROOT, "data", "avis.json"), "utf8"
 const AVIS = (Array.isArray(avisData.avis) ? avisData.avis : []).filter((a) => a && a.nom && a.texte);
 const AVIS_URL = (avisData.meta && avisData.meta.url) || site.contact.maps_url;
 
+const SITE_URL = "https://rusricehero-coder.github.io/master-professionnel-site/";
 const C = site.contact;
 const W = `https://wa.me/${C.whatsapp}`;
 const MAIL = `mailto:${C.email}`;
@@ -198,7 +199,9 @@ function layout({ base = "", active = "", title, description, body, extraHead = 
 <meta property="og:site_name" content="${esc(site.marque.nom_complet)}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
-<meta property="og:image" content="${base}assets/img/og-image.png">
+<meta property="og:image" content="${SITE_URL}assets/img/og-image.png">
+<meta property="og:url" content="${SITE_URL}__PATH__">
+<link rel="canonical" href="${SITE_URL}__PATH__">
 <meta property="og:locale" content="fr_BJ">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="${base}assets/brand/favicon.svg" type="image/svg+xml">
@@ -1324,7 +1327,7 @@ const notFound = () =>
 const write = (path, content) => {
   const full = join(ROOT, path);
   mkdirSync(dirname(full), { recursive: true });
-  writeFileSync(full, content, "utf8");
+  writeFileSync(full, content.replace(/__PATH__/g, path === "index.html" ? "" : path), "utf8");
   return path;
 };
 
@@ -1342,6 +1345,35 @@ files.push(write("mentions-legales.html", legalPage("mentions-legales")));
 files.push(write("confidentialite.html", legalPage("confidentialite")));
 files.push(write("404.html", notFound()));
 data.filiere.forEach((f, i) => files.push(write(`formations/${f.slug}.html`, fichePage(f, i))));
+
+/* --------------------------------------------------------------- SEO */
+const PAGES_SEO = [
+  "index.html",
+  "formations.html",
+  "services.html",
+  "galerie.html",
+  "publications.html",
+  "avis.html",
+  "inscriptions.html",
+  "a-propos.html",
+  "contact.html",
+  "mentions-legales.html",
+  "confidentialite.html",
+  ...data.filiere.map((f) => `formations/${f.slug}.html`),
+];
+const jour = new Date().toISOString().slice(0, 10);
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${PAGES_SEO.map(
+  (p) =>
+    `  <url><loc>${SITE_URL}${p === "index.html" ? "" : p}</loc><lastmod>${jour}</lastmod><changefreq>${
+      p === "index.html" ? "weekly" : "monthly"
+    }</changefreq><priority>${p === "index.html" ? "1.0" : "0.7"}</priority></url>`
+).join("\n")}
+</urlset>
+`;
+files.push(write("sitemap.xml", sitemap));
+files.push(write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}sitemap.xml\n`));
 
 console.log(`${files.length} pages générées :`);
 files.forEach((f) => console.log(" - " + f));
