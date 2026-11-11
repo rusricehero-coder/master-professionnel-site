@@ -1,0 +1,307 @@
+{
+  "meta": {
+    "devise": "FCFA",
+    "note": "Tarifs indicatifs exprimés en francs CFA. Ils sont susceptibles d'évolution ; le tarif applicable est confirmé au moment de l'inscription."
+  },
+  "categories": [
+    { "id": "tous", "label": "Toutes les filières" },
+    { "id": "bureautique", "label": "Bureautique" },
+    { "id": "graphisme", "label": "Graphisme & design" },
+    { "id": "maintenance", "label": "Maintenance" },
+    { "id": "reseaux", "label": "Réseaux" },
+    { "id": "securite", "label": "Sécurité & électronique" },
+    { "id": "dev", "label": "Développement" },
+    { "id": "ia", "label": "Intelligence artificielle" }
+  ],
+  "filiere": [
+    {
+      "slug": "initiation-informatique",
+      "nom": "Initiation à l'informatique",
+      "categorie": "bureautique",
+      "duree": "1 mois",
+      "prix": "5 000",
+      "prix_texte": "5 000 FCFA",
+      "resume": "Premiers pas avec un ordinateur : Windows, Word, Internet et messagerie, pour devenir autonome au quotidien.",
+      "objectifs": [
+        "Utiliser Windows et organiser ses fichiers et dossiers",
+        "Saisir, mettre en forme et imprimer un document Word",
+        "Naviguer sur Internet, rechercher et envoyer un e-mail"
+      ],
+      "programme": [
+        "Découverte du matériel, du clavier et de la souris",
+        "Windows : bureau, fichiers, dossiers, périphériques",
+        "Word : saisie, mise en forme, enregistrement, impression",
+        "Internet et messagerie électronique"
+      ],
+      "debouches": ["Agent de saisie", "Assistant administratif débutant", "Poursuite en secrétariat bureautique"]
+    },
+    {
+      "slug": "secretariat-bureautique",
+      "nom": "Secrétariat bureautique",
+      "categorie": "bureautique",
+      "duree": "3 mois",
+      "prix": "30 000",
+      "prix_texte": "30 000 FCFA",
+      "resume": "Produire, organiser et gérer les documents professionnels d'une entreprise avec Word, Excel et les outils du bureau.",
+      "objectifs": [
+        "Rédiger et présenter des documents professionnels soignés",
+        "Construire des tableaux et des calculs fiables sur Excel",
+        "Gérer courrier, classement et accueil téléphonique"
+      ],
+      "programme": [
+        "Word avancé : styles, modèles, publipostage",
+        "Excel : tableaux, formules, graphiques, impression",
+        "Organisation du secrétariat et classement numérique",
+        "Courrier professionnel, accueil et communication",
+        "Initiation à Internet et à la messagerie professionnelle"
+      ],
+      "debouches": ["Secrétaire bureautique", "Assistant de direction", "Agent administratif"]
+    },
+    {
+      "slug": "graphisme-design",
+      "nom": "Graphisme & design",
+      "categorie": "graphisme",
+      "duree": "6 mois",
+      "prix": "120 000",
+      "prix_texte": "120 000 FCFA",
+      "resume": "Créer des affiches, logos et visuels pour les réseaux sociaux avec les outils professionnels du design.",
+      "objectifs": [
+        "Maîtriser les bases du dessin vectoriel et de la retouche photo",
+        "Concevoir un logo et une identité visuelle complète",
+        "Produire des visuels adaptés à l'impression et au web"
+      ],
+      "programme": [
+        "Bases du design : couleurs, typographie, composition",
+        "Illustrator : logos, affiches, mise en page vectorielle",
+        "Photoshop : retouche, détourage, photomontage",
+        "Identité visuelle et charte graphique",
+        "Visuels réseaux sociaux et préparation pour l'impression"
+      ],
+      "debouches": ["Graphiste indépendant", "Infographiste en imprimerie", "Community manager visuel"]
+    },
+    {
+      "slug": "maintenance-informatique-reseaux",
+      "nom": "Maintenance informatique & réseaux",
+      "categorie": "maintenance",
+      "duree": "12 mois",
+      "prix": "150 000",
+      "prix_texte": "150 000 FCFA",
+      "inscription": "5 000 FCFA (T-shirt + trousse de dépannage)",
+      "resume": "Diagnostiquer, réparer et entretenir un ordinateur, installer un réseau et sécuriser une connexion.",
+      "objectifs": [
+        "Diagnostiquer une panne matérielle ou logicielle et la réparer",
+        "Installer et configurer un poste de travail complet",
+        "Mettre en place et sécuriser un petit réseau local"
+      ],
+      "programme": [
+        "Architecture du PC et des composants",
+        "Installation de Windows, pilotes et logiciels",
+        "Diagnostic, dépannage et remplacement de pièces",
+        "Réseaux : câblage, adressage IP, partage de connexion",
+        "Sécurité de base, sauvegarde et récupération de données",
+        "Stage pratique en atelier"
+      ],
+      "debouches": ["Technicien de maintenance", "Technicien réseau", "Créateur de son propre atelier"]
+    },
+    {
+      "slug": "mecanographie-copieurs",
+      "nom": "Mécanographie & copieurs",
+      "categorie": "maintenance",
+      "duree": "6 mois",
+      "prix": "150 000",
+      "prix_texte": "150 000 FCFA",
+      "resume": "Réparer, entretenir et recharger les imprimantes, photocopieurs et équipements de bureau.",
+      "objectifs": [
+        "Comprendre le fonctionnement des imprimantes et copieurs",
+        "Réaliser l'entretien, le rechargement et les réglages",
+        "Diagnostiquer les pannes courantes et commander les bonnes pièces"
+      ],
+      "programme": [
+        "Technologie des imprimantes jet d'encre et laser",
+        "Photocopieurs : mécanique, optique, alimentation papier",
+        "Rechargement de toner et d'encre",
+        "Entretien préventif et diagnostic des pannes",
+        "Gestion d'un atelier et relation client"
+      ],
+      "debouches": ["Technicien mécanographe", "Agent de maintenance bureautique", "Service après-vente en informatique"]
+    },
+    {
+      "slug": "reseaux-administration",
+      "nom": "Réseaux & administration",
+      "categorie": "reseaux",
+      "duree": "9 mois",
+      "prix": "250 000",
+      "prix_texte": "250 000 FCFA",
+      "resume": "Installer, administrer et superviser un réseau d'entreprise, du câblage à la gestion des serveurs.",
+      "objectifs": [
+        "Concevoir et câbler un réseau local structuré",
+        "Configurer routeurs, switchs et points d'accès Wi-Fi",
+        "Administrer un serveur et les services de partage"
+      ],
+      "programme": [
+        "Modèles réseau, câblage et normes",
+        "Adressage IP, routage et commutation",
+        "Wi-Fi, VLAN et interconnexion de sites",
+        "Serveurs : fichiers, imprimantes, comptes utilisateurs",
+        "Supervision, sauvegarde et sécurité du réseau"
+      ],
+      "debouches": ["Administrateur réseau", "Technicien réseau et systèmes", "Installateur de réseaux Wi-Fi"]
+    },
+    {
+      "slug": "cybersecurite-robotique-electronique",
+      "nom": "Cybersécurité, robotique & électronique",
+      "categorie": "securite",
+      "duree": "12 mois",
+      "prix": "350 000",
+      "prix_texte": "350 000 FCFA",
+      "resume": "Protéger les données numériques et découvrir l'électronique et la robotique appliquées.",
+      "objectifs": [
+        "Identifier les menaces et les bonnes pratiques de sécurité",
+        "Sécuriser un poste, un réseau et les accès",
+        "Comprendre et assembler un montage électronique simple"
+      ],
+      "programme": [
+        "Fondamentaux de la cybersécurité et des menaces",
+        "Sécurité des postes, des mots de passe et des sauvegardes",
+        "Sécurité réseau, pare-feu et détection d'intrusion",
+        "Électronique de base et capteurs",
+        "Robotique : montage, programmation et pilotage",
+        "Projets de fin de formation"
+      ],
+      "debouches": ["Technicien en cybersécurité", "Technicien électronique", "Assistant en robotique"]
+    },
+    {
+      "slug": "cameras-surveillance-gps",
+      "nom": "Caméras de surveillance & GPS",
+      "categorie": "securite",
+      "duree": "2 mois",
+      "prix": "70 000",
+      "prix_texte": "70 000 FCFA",
+      "inscription": "15 000 FCFA (T-shirt inclus)",
+      "resume": "Installer et configurer des systèmes de vidéosurveillance et de géolocalisation pour particuliers et entreprises.",
+      "objectifs": [
+        "Choisir et installer un kit de caméras de surveillance",
+        "Configurer l'enregistrement et l'accès à distance",
+        "Installer et paramétrer un traceur GPS"
+      ],
+      "programme": [
+        "Technologie des caméras IP et analogiques",
+        "Installation, câblage et alimentation",
+        "Configuration du DVR/NVR et accès à distance",
+        "Traceurs GPS : installation et plateforme de suivi",
+        "Maintenance et dépannage des installations"
+      ],
+      "debouches": ["Installateur vidéosurveillance", "Technicien GPS", "Prestataire en sécurité électronique"]
+    },
+    {
+      "slug": "developpement-web-applications",
+      "nom": "Développement web & applications",
+      "categorie": "dev",
+      "duree": "3 à 9 mois",
+      "prix": "250 000 à 350 000",
+      "prix_texte": "250 000 – 350 000 FCFA selon le programme",
+      "resume": "Créer des sites modernes, responsives et des applications qui répondent à un besoin réel.",
+      "objectifs": [
+        "Construire une page web structurée et responsive",
+        "Maîtriser HTML, CSS, JavaScript et les bases d'un framework",
+        "Mettre un site en ligne et le maintenir"
+      ],
+      "programme": [
+        "HTML5 et structure d'une page",
+        "CSS : mise en page, responsive, animations",
+        "JavaScript et interactivité",
+        "Introduction aux bases de données et au back-end",
+        "Projet complet : conception, développement, mise en ligne",
+        "Nom de domaine, hébergement et maintenance"
+      ],
+      "debouches": ["Développeur web junior", "Intégrateur web", "Freelance en création de sites"]
+    },
+    {
+      "slug": "graphisme-2d-3d",
+      "nom": "Graphisme 2D & 3D",
+      "categorie": "graphisme",
+      "duree": "3 à 6 mois",
+      "prix": "120 000",
+      "prix_texte": "120 000 FCFA",
+      "resume": "Passer du visuel plat à la 3D : modélisation, rendu et animation pour des projets créatifs.",
+      "objectifs": [
+        "Modéliser des objets et des scènes en 3D",
+        "Appliquer textures, lumières et rendus réalistes",
+        "Réaliser des animations courtes et des visuels produits"
+      ],
+      "programme": [
+        "Rappels de design 2D et composition",
+        "Modélisation 3D : volumes, maillage, matériaux",
+        "Éclairage, caméra et rendu",
+        "Animation et export vidéo",
+        "Projet personnel encadré"
+      ],
+      "debouches": ["Modeleur 3D junior", "Infographiste 3D", "Créateur de visuels produits"]
+    },
+    {
+      "slug": "informatique-comptable",
+      "nom": "Informatique comptable",
+      "categorie": "bureautique",
+      "duree": "5 jours à 3 mois",
+      "prix": "25 000 à 50 000",
+      "prix_texte": "25 000 – 50 000 FCFA",
+      "resume": "Utiliser l'outil informatique pour tenir une comptabilité simple : tableurs, logiciels et documents.",
+      "objectifs": [
+        "Construire des tableaux comptables fiables sur Excel",
+        "Utiliser un logiciel de comptabilité",
+        "Produire les états et documents de gestion courants"
+      ],
+      "programme": [
+        "Excel appliqué à la comptabilité",
+        "Saisie des opérations et gestion des journaux",
+        "Logiciel de comptabilité : paramétrage et utilisation",
+        "Bilan, compte de résultat et états simples",
+        "Archivage numérique des pièces"
+      ],
+      "debouches": ["Aide-comptable", "Assistant de gestion", "Gestionnaire de petite entreprise"]
+    },
+    {
+      "slug": "graphisme-mobile-b-pro",
+      "nom": "Graphisme mobile B+Pro",
+      "categorie": "graphisme",
+      "duree": "1 mois",
+      "prix": "25 000",
+      "prix_texte": "25 000 FCFA",
+      "resume": "Créer des visuels professionnels directement depuis un téléphone, avec les applications mobiles de design.",
+      "objectifs": [
+        "Maîtriser les applications mobiles de création graphique",
+        "Composer des visuels pour les réseaux sociaux",
+        "Préparer et exporter des fichiers prêts à publier"
+      ],
+      "programme": [
+        "Prise en main des outils de design mobile",
+        "Composition, couleurs et typographie sur petit écran",
+        "Affiches, flyers et publications réseaux sociaux",
+        "Export, formats et bonnes pratiques de publication"
+      ],
+      "debouches": ["Créateur de contenus visuels", "Community manager débutant", "Graphiste mobile indépendant"]
+    },
+    {
+      "slug": "intelligence-artificielle",
+      "nom": "Intelligence artificielle",
+      "categorie": "ia",
+      "duree": "2 semaines",
+      "prix": "20 000",
+      "prix_texte": "20 000 FCFA",
+      "resume": "Automatiser des tâches et gagner du temps avec les outils d'IA générative, dont ChatGPT et Microsoft Copilot.",
+      "objectifs": [
+        "Rédiger de bons prompts pour obtenir des résultats utiles",
+        "Automatiser des tâches administratives et créatives",
+        "Utiliser l'IA de façon responsable et vérifier ses résultats"
+      ],
+      "programme": [
+        "Panorama des outils d'IA générative",
+        "Rédaction de prompts efficaces",
+        "IA et bureautique : rédaction, résumé, traduction",
+        "Création d'images et de contenus assistée par IA",
+        "Limites, biais et bonnes pratiques"
+      ],
+      "debouches": ["Assistant digital augmenté par l'IA", "Créateur de contenus", "Gain de productivité dans son métier"]
+    }
+  ]
+}

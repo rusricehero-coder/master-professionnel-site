@@ -1,0 +1,23 @@
+PHOTOS DU CENTRE — MODE D'EMPLOI
+================================
+
+Déposez ici vos photos en respectant exactement ces noms de fichiers :
+
+    photo-01.jpg
+    photo-02.jpg
+    photo-03.jpg
+    ...
+    photo-12.jpg
+
+Formats acceptés : .jpg (recommandé). Pour les autres formats, renommez
+simplement le fichier en .jpg, ou demandez la modification de la galerie.
+
+Conseils :
+- Privilégiez des images de 1200 à 1600 px de large, moins de 500 Ko chacune
+  (le site doit rester rapide sur mobile).
+- Évitez les photos floues ou sombres : la galerie est recadrée au format 4:3
+  et centrée automatiquement.
+- Une photo manquante est simplement ignorée : la page reste correcte.
+
+La page galerie affiche automatiquement les photos présentes.
+Aucune autre manipulation n'est nécessaire.

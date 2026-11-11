@@ -1,0 +1,389 @@
+{
+  "marque": {
+    "nom": "Master Professionnel",
+    "nom_complet": "Centre Informatique Master Professionnel",
+    "surnom": "Les Solidaires de l'informatique",
+    "baseline": "Formez-vous aujourd'hui aux métiers de demain.",
+    "ville": "Hêvié",
+    "pays": "Bénin"
+  },
+  "contact": {
+    "telephone": "+229 01 95 81 81 67",
+    "telephone_lien": "+2290195818167",
+    "whatsapp": "2290195818167",
+    "email": "rusricehero@gmail.com",
+    "adresse_courte": "Hêvié — Hêssa, Bénin",
+    "adresse": "Hêvié, quartier Hêssa, à côté de la Micro-finance MSFP — juste après le bar Glo, en quittant le carrefour Hêvié vers la mairie.",
+    "repere": "En face du Collège La Plénitude",
+    "horaires": [
+      {
+        "jours": "Lundi – Vendredi",
+        "heures": "08h00 – 19h00"
+      },
+      {
+        "jours": "Samedi",
+        "heures": "09h00 – 14h00"
+      }
+    ],
+    "maps_url": "https://share.google/2IcaZNPD3CyBpEbqZ",
+    "maps_embed": "https://www.google.com/maps?q=6.4377561,2.3247047&hl=fr&z=16&output=embed",
+    "coordonnees": {
+      "lat": 6.4377561,
+      "lng": 2.3247047
+    }
+  },
+  "paiement": [
+    {
+      "operateur": "Moov Money",
+      "numero": "01 95 81 81 67",
+      "nom": "AGONGLO Amédée Brice"
+    },
+    {
+      "operateur": "MTN Mobile Money",
+      "numero": "01 97 00 16 57",
+      "nom": "AGONGLO Amédée Brice"
+    },
+    {
+      "operateur": "Celtiis Cash",
+      "numero": "01 43 80 31 33",
+      "nom": "AGONGLO Amédée Brice"
+    }
+  ],
+  "legal": {
+    "raison_sociale": "Centre Informatique Master Professionnel",
+    "ifu": "0202213971151",
+    "rccm": "RB-ABC-22-A-40203",
+    "responsable": "AGONGLO Amédée Brice",
+    "hebergeur": "GitHub Pages — GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis"
+  },
+  "reseaux": [
+    {
+      "nom": "Facebook",
+      "url": "https://www.facebook.com/papirusbriceofficielle"
+    },
+    {
+      "nom": "LinkedIn",
+      "url": "https://www.linkedin.com/in/agonglo-amedee-brice-180a3898/"
+    },
+    {
+      "nom": "YouTube",
+      "url": "https://www.youtube.com/@Masterprofessionnel"
+    },
+    {
+      "nom": "Instagram",
+      "url": "https://www.instagram.com/papirus_brice/"
+    },
+    {
+      "nom": "TikTok",
+      "url": "https://www.tiktok.com/@papirusbrice"
+    },
+    {
+      "nom": "Snapchat",
+      "url": "https://www.snapchat.com/add/masterprotech"
+    },
+    {
+      "nom": "X",
+      "url": "https://x.com/rusricehero"
+    }
+  ],
+  "services": [
+    {
+      "icone": "monitor",
+      "titre": "Vente de matériel",
+      "texte": "Ordinateurs, imprimantes, photocopieurs, consommables et accessoires bureautiques, avec conseil et garantie."
+    },
+    {
+      "icone": "wrench",
+      "titre": "Maintenance & dépannage",
+      "texte": "Diagnostic, réparation de PC, installation de systèmes et de logiciels, récupération de données."
+    },
+    {
+      "icone": "printer",
+      "titre": "Mécanographie & copieurs",
+      "texte": "Entretien et réparation d'imprimantes et de photocopieurs, rechargement de toner et d'encre."
+    },
+    {
+      "icone": "network",
+      "titre": "Réseaux & Wi-Fi",
+      "texte": "Câblage, installation de réseaux locaux, configuration de routeurs, points d'accès et partage de connexion."
+    },
+    {
+      "icone": "camera",
+      "titre": "Vidéosurveillance & GPS",
+      "texte": "Installation de caméras de surveillance, enregistreurs et traceurs GPS pour maisons et entreprises."
+    },
+    {
+      "icone": "code",
+      "titre": "Développement web",
+      "texte": "Sites vitrines, boutiques en ligne, applications et mise en ligne, du cahier des charges à la maintenance."
+    },
+    {
+      "icone": "shield",
+      "titre": "Cybersécurité & IA",
+      "texte": "Sécurisation des postes et des données, sensibilisation des équipes et automatisation des tâches avec l'IA."
+    },
+    {
+      "icone": "cap",
+      "titre": "Formation sur mesure",
+      "texte": "Cours du jour ou du soir, en présentiel ou en ligne, pour particuliers, entreprises et administrations."
+    }
+  ],
+  "fondateur": {
+    "nom": "AGONGLO Amédée Brice",
+    "alias": "Papirus Brice",
+    "role": "Fondateur & formateur principal",
+    "photo": "assets/img/photos/photo-auteur.jpg",
+    "bio": "Ingénieur de conception en informatique diplômé de l'École polytechnique d'Abomey-Calavi (EPAC, UAC) en 2010, entrepreneur et auteur béninois. Il conçoit des solutions numériques, forme depuis 2006 et accompagne les organisations dans leur transformation digitale.",
+    "points": [
+      "Ingénieur en conception informatique (EPAC — UAC, 2010)",
+      "Formateur en informatique depuis 2006, plus de 20 supports de cours conçus",
+      "Certifié LinkedIn Learning : IA générative, Microsoft Copilot, analyse de données, cybersécurité",
+      "Certifié Anthropic : Claude API, Model Context Protocol, Claude avec Google Vertex AI",
+      "Auteur de six ouvrages sur l'IA, le travail et la société"
+    ]
+  },
+  "certifications": [
+    {
+      "titre": "Claude with the Anthropic API",
+      "organisme": "Anthropic",
+      "date": "2026",
+      "url": "https://verify.skilljar.com/c/ubisqg9guo4j"
+    },
+    {
+      "titre": "Model Context Protocol: Advanced Topics",
+      "organisme": "Anthropic",
+      "date": "2026",
+      "url": "https://verify.skilljar.com/c/s5s4x8wkwz3z"
+    },
+    {
+      "titre": "Claude with Google Vertex AI",
+      "organisme": "Anthropic",
+      "date": "2026",
+      "url": "https://verify.skilljar.com/c/aj3hnw8dyvp4"
+    },
+    {
+      "titre": "Simplifiez votre travail avec Microsoft Copilot",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Découvrir l'IA générative",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Préparer votre carrière dans l'IA générative",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Se préparer au métier d'analyste de données",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Découvrir la data science : comprendre les bases",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Les fondements de la sécurité informatique et de la cybersécurité",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Préparer votre carrière dans la cybersécurité",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Aperçu des menaces de cybersécurité",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    },
+    {
+      "titre": "Sensibilisation à la cybersécurité",
+      "organisme": "LinkedIn Learning",
+      "date": "2026",
+      "url": ""
+    }
+  ],
+  "ouvrages": [
+    "La Tragédie de l'Afrique : le savoir sacré confisqué",
+    "IA et humanité : un regard humain sur le monde des machines",
+    "Devenir indispensable à l'ère de l'IA : les 7 compétences que les machines ne voleront jamais",
+    "La Renaissance des métiers à l'ère de l'IA : réinventer le travail dans un monde connecté",
+    "Mes 14 ans d'une vie courte : Audrey",
+    "La Trahison"
+  ],
+  "avantages": [
+    {
+      "icone": "cap",
+      "titre": "100 % pratique",
+      "texte": "Ateliers, exercices et projets réels plutôt que de la théorie."
+    },
+    {
+      "icone": "badge",
+      "titre": "Certificat & attestation",
+      "texte": "Attestation de fin de formation, légalisable sur demande."
+    },
+    {
+      "icone": "briefcase",
+      "titre": "Insertion & stage",
+      "texte": "Stage en entreprise et accompagnement vers l'emploi pour les meilleurs."
+    },
+    {
+      "icone": "clock",
+      "titre": "Jour ou soir",
+      "texte": "Cours en présentiel ou en ligne, adaptés à votre emploi du temps."
+    }
+  ],
+  "etapes": [
+    {
+      "titre": "Choisissez votre filière",
+      "texte": "Parcourez les 13 filières et repérez celle qui correspond à votre projet."
+    },
+    {
+      "titre": "Pré-inscrivez-vous",
+      "texte": "Envoyez le formulaire ou écrivez sur WhatsApp : nous confirmons votre place et la date de session."
+    },
+    {
+      "titre": "Déposez votre dossier",
+      "texte": "Apportez les pièces demandées et réglez les 2 000 FCFA de frais d'inscription au centre."
+    }
+  ],
+  "pieces": [
+    "1 copie d'acte de naissance ou carte d'identité",
+    "1 à 2 photos d'identité",
+    "Photocopie de la pièce d'identité ou équivalent",
+    "02 enveloppes timbrées (adresse des parents ou tuteurs)",
+    "Fiche d'inscription, de bonne conduite et d'engagement (fournie au centre)",
+    "Chemise dossier à rabat (vendue au centre)",
+    "Frais d'inscription : 2 000 FCFA"
+  ],
+  "infos_pratiques": [
+    {
+      "titre": "Tenue",
+      "texte": "T-shirt du centre sur pantalon noir."
+    },
+    {
+      "titre": "Début des sessions",
+      "texte": "Chaque début de mois, inscription immédiate possible."
+    },
+    {
+      "titre": "Sur mesure",
+      "texte": "Formations spécifiques et perfectionnement à la demande."
+    },
+    {
+      "titre": "Diplôme",
+      "texte": "Diplôme et attestation légalisés : 15 000 FCFA."
+    }
+  ],
+  "faq": [
+    {
+      "q": "Comment se déroule l'inscription ?",
+      "r": "Vous choisissez une filière, vous remplissez le formulaire de pré-inscription ou vous écrivez sur WhatsApp, puis vous déposez votre dossier au centre avec les 2 000 FCFA de frais d'inscription. Une place vous est réservée pour la session du mois en cours ou du mois suivant."
+    },
+    {
+      "q": "Quand commencent les cours ?",
+      "r": "Les sessions démarrent chaque début de mois. Les inscriptions restent ouvertes toute l'année et une inscription immédiate est possible."
+    },
+    {
+      "q": "Puis-je suivre les cours en travaillant ?",
+      "r": "Oui. Les cours sont proposés en journée ou en soirée, en présentiel au centre de Hêvié ou en ligne selon la filière."
+    },
+    {
+      "q": "Les tarifs sont-ils payables en plusieurs fois ?",
+      "r": "Les modalités de paiement échelonné sont étudiées au cas par cas lors de l'inscription. Le paiement peut se faire en espèces, par Mobile Money (Moov, MTN, Celtiis) ou par virement."
+    },
+    {
+      "q": "Le stage est-il garanti ?",
+      "r": "Un stage pratique est prévu dans les filières concernées et l'insertion professionnelle est accompagnée pour les meilleurs apprenants, en lien avec nos structures partenaires."
+    },
+    {
+      "q": "Le certificat est-il reconnu ?",
+      "r": "Le centre délivre une attestation de fin de formation. La légalisation du diplôme et de l'attestation est possible pour 15 000 FCFA."
+    }
+  ],
+  "catalogue": {
+    "ouvrages": [
+      {
+        "titre": "Le Burkina Faso, l'AES et le réveil panafricain",
+        "sous_titre": "Essai · histoire et souveraineté",
+        "image": "assets/img/livres/burkina-faso-aes.jpg"
+      },
+      {
+        "titre": "La Renaissance des métiers à l'ère de l'IA",
+        "sous_titre": "Essai · travail et intelligence artificielle",
+        "image": "assets/img/livres/renaissance-ia.jpg"
+      },
+      {
+        "titre": "Mes 14 ans d'une vie courte : Audrey",
+        "sous_titre": "Récit",
+        "image": "assets/img/livres/audrey.jpg"
+      },
+      {
+        "titre": "Lueur de moi",
+        "sous_titre": "Recueil de poésie",
+        "image": "assets/img/livres/lueur-de-moi.jpg"
+      }
+    ],
+    "informatique": [
+      {
+        "titre": "Cybersécurité",
+        "sous_titre": "12 semaines · théorie, ateliers et exercices corrigés",
+        "image": "assets/img/supports/cybersecurite.jpg"
+      },
+      {
+        "titre": "Programmation & IA appliquées à la télémédecine",
+        "sous_titre": "Manuel de formation en 6 tomes",
+        "image": "assets/img/supports/telemedecine.jpg"
+      },
+      {
+        "titre": "Office : Word, Excel, PowerPoint, Publisher",
+        "sous_titre": "Manuel support de cours",
+        "image": "assets/img/supports/office.jpg"
+      },
+      {
+        "titre": "CorelDRAW",
+        "sous_titre": "Support de formation pratique, bilingue FR/EN",
+        "image": "assets/img/supports/coreldraw.jpg"
+      }
+    ],
+    "elevage": [
+      {
+        "titre": "Élevage du poulet",
+        "sous_titre": "Techniques modernes et traditionnelles",
+        "image": "assets/img/elevage/01-poulet.jpg"
+      },
+      {
+        "titre": "Fabrication et gestion de l'aliment",
+        "sous_titre": "Formules, doses, coûts et contrôle",
+        "image": "assets/img/elevage/02-aliment.jpg"
+      },
+      {
+        "titre": "Phytothérapie — 30 plantes",
+        "sous_titre": "Usages, préparations, doses et précautions",
+        "image": "assets/img/elevage/03-phytotherapie.jpg"
+      },
+      {
+        "titre": "Comptabilité et tableaux Excel",
+        "sous_titre": "Calculs, marges, suivi et rentabilité",
+        "image": "assets/img/elevage/04-comptabilite.jpg"
+      },
+      {
+        "titre": "Canard, lapin, pintade, caille et mouton",
+        "sous_titre": "Élevage, alimentation, soins et réussite",
+        "image": "assets/img/elevage/05-autres-elevages.jpg"
+      }
+    ]
+  }
+}

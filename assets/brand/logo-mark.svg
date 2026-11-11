@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Master Professionnel"><defs>
+    <linearGradient id="mp-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0E2F6B"/>
+      <stop offset=".55" stop-color="#1B54C4"/>
+      <stop offset="1" stop-color="#2E72F5"/>
+    </linearGradient>
+    <linearGradient id="mp-shine" x1=".2" y1="0" x2=".8" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".22"/>
+      <stop offset=".6" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs><rect width="96" height="96" rx="26" fill="url(#mp-grad)"/>
+  <rect width="96" height="96" rx="26" fill="url(#mp-shine)"/>
+  <path d="M25 65V31l23 21 23-21v34" fill="none" stroke="#fff" stroke-width="8.6"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="31" y="73.5" width="34" height="5" rx="2.5" fill="#FF5470"/></svg>
