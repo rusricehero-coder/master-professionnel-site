@@ -329,6 +329,7 @@ body.nav-open .burger span:nth-child(3) { top: 21px; transform: rotate(-45deg); 
 .cta-band::after {
   content: ""; position: absolute; right: -60px; bottom: -80px; width: 280px; height: 280px;
   border-radius: 50%; border: 40px solid rgba(255, 255, 255, .06);
+  pointer-events: none; /* le décor ne doit jamais intercepter un clic */
 }
 .cta-band h2 { color: #fff; max-width: 20ch; }
 .cta-band p { color: #C6D6F2; margin-top: 12px; max-width: 52ch; }

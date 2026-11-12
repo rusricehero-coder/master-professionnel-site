@@ -108,7 +108,7 @@ function header(base, active) {
       <img src="${base}assets/brand/logo-horizontal.svg" alt="Master Professionnel" width="130" height="44">
     </a>
     <nav class="nav" id="menu" aria-label="Navigation principale">${links}</nav>
-    <a class="btn btn--sm header__cta" href="${base}inscriptions.html">S'inscrire ${icon("arrow")}</a>
+    <a class="btn btn--sm header__cta" href="${base}espace/index.html">S'inscrire ${icon("arrow")}</a>
     <button class="burger" type="button" aria-label="Ouvrir le menu" aria-controls="menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
