@@ -15,10 +15,10 @@
 <link rel="canonical" href="https://rusricehero-coder.github.io/master-professionnel-site/404.html">
 <meta property="og:locale" content="fr_BJ">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="assets/brand/favicon-32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="/master-professionnel-site/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/master-professionnel-site/assets/brand/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/master-professionnel-site/assets/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/master-professionnel-site/assets/css/style.css">
 
 </head>
 <body>
@@ -26,48 +26,72 @@
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header class="header">
   <div class="container header__inner">
-    <a class="brand" href="index.html" aria-label="Master Professionnel — accueil">
-      <img src="assets/brand/logo-horizontal.svg" alt="Master Professionnel" width="130" height="44">
+    <a class="brand" href="/master-professionnel-site/index.html" aria-label="Master Professionnel — accueil">
+      <img src="/master-professionnel-site/assets/brand/logo-horizontal.svg" alt="Master Professionnel" width="130" height="44">
     </a>
-    <nav class="nav" id="menu" aria-label="Navigation principale"><a href="formations.html">Formations</a><a href="services.html">Services</a><a href="galerie.html">Galerie</a><a href="publications.html">Publications</a><a href="avis.html">Avis</a><a href="inscriptions.html">Inscriptions</a><a href="a-propos.html">À propos</a><a href="contact.html">Contact</a></nav>
-    <a class="btn btn--sm header__cta" href="espace/index.html">S'inscrire <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <nav class="nav" id="menu" aria-label="Navigation principale"><a href="/master-professionnel-site/formations.html">Formations</a><a href="/master-professionnel-site/services.html">Services</a><a href="/master-professionnel-site/galerie.html">Galerie</a><a href="/master-professionnel-site/publications.html">Publications</a><a href="/master-professionnel-site/avis.html">Avis</a><a href="/master-professionnel-site/inscriptions.html">Inscriptions</a><a href="/master-professionnel-site/a-propos.html">À propos</a><a href="/master-professionnel-site/contact.html">Contact</a></nav>
+    <a class="btn btn--sm header__cta" href="/master-professionnel-site/espace/index.html">S'inscrire <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     <button class="burger" type="button" aria-label="Ouvrir le menu" aria-controls="menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
 <main id="contenu">
-<section class="page-head"><div class="container"><h1>Page introuvable</h1>
-    <p class="lead" style="color:#C6D6F2">Cette page n'existe pas ou a été déplacée.</p></div></section>
-    <section class="section"><div class="container" style="text-align:center">
-    <p class="lead" style="max-width:46ch;margin:0 auto 24px">Retournez à l'accueil ou parcourez nos filières de formation.</p>
-    <div class="btn-row" style="justify-content:center"><a class="btn" href="index.html">Accueil <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn btn--outline" href="formations.html">Les formations</a></div>
+<section class="page-head"><div class="container">
+      <h1 id="t404">Page introuvable</h1>
+      <p class="lead" id="m404" style="color:#C6D6F2">Cette page n'existe pas ou a été déplacée.</p>
     </div></section>
+    <section class="section"><div class="container" style="text-align:center">
+      <p class="lead" id="aide404" style="max-width:52ch;margin:0 auto 24px">Retournez à l'accueil, consultez nos formations, ou connectez-vous à votre espace.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn" href="/master-professionnel-site/index.html">Accueil <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn--outline" href="/master-professionnel-site/espace/index.html">Espace apprenant</a>
+        <a class="btn btn--outline" href="/master-professionnel-site/formations.html">Les formations</a>
+      </div>
+      <p class="form__note" id="redir404" style="margin-top:18px"></p>
+    </div></section>
+    <script>
+    (function () {
+      if (!/confirmation|verify|espace/i.test(location.pathname)) return;
+      document.getElementById("t404").textContent = "Ce lien n'est plus valide";
+      document.getElementById("m404").textContent = "Le lien de confirmation a expiré ou a déjà été utilisé.";
+      document.getElementById("aide404").textContent = "Aucune inquiétude : votre compte existe. Connectez-vous avec votre e-mail et votre mot de passe.";
+      var cible = "/master-professionnel-site/espace/index.html";
+      var note = document.getElementById("redir404");
+      var reste = 5;
+      note.textContent = "Redirection vers la connexion dans " + reste + " secondes…";
+      var t = setInterval(function () {
+        reste -= 1;
+        if (reste <= 0) { clearInterval(t); location.href = cible; return; }
+        note.textContent = "Redirection vers la connexion dans " + reste + " secondes…";
+      }, 1000);
+    })();
+    </script>
 </main>
 <footer class="footer">
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <img src="assets/brand/logo-horizontal-dark.svg" alt="Master Professionnel" width="136" height="46">
+        <img src="/master-professionnel-site/assets/brand/logo-horizontal-dark.svg" alt="Master Professionnel" width="136" height="46">
         <p>Centre Informatique Master Professionnel — « Les Solidaires de l'informatique ». Formations, services informatiques et accompagnement numérique à Hêvié — Hêssa, Bénin.</p>
         <div class="socials"><a href="https://www.facebook.com/papirusbriceofficielle" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3V6h-3c-1.9 0-3.5 1.6-3.5 3.5V11H8v3h2.5v7h3v-7H17l.5-3h-4V9.5c0-.3.2-.5.5-.5z"/></svg></a><a href="https://www.linkedin.com/in/agonglo-amedee-brice-180a3898/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.5 9H8v12H4.5zM6.2 3a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7c.5-1 1.7-1.9 3.4-1.9 3 0 3.7 1.9 3.7 4.6V21H17v-6.6c0-1.6-.5-2.5-1.9-2.5-1.3 0-2 1-2 2.5V21H10z"/></svg></a><a href="https://www.youtube.com/@Masterprofessionnel" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 8.2a3 3 0 0 0-2.1-2.1C17.2 5.6 12 5.6 12 5.6s-5.2 0-6.9.5A3 3 0 0 0 3 8.2 31 31 0 0 0 2.6 12 31 31 0 0 0 3 15.8a3 3 0 0 0 2.1 2.1c1.7.5 6.9.5 6.9.5s5.2 0 6.9-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 21.4 12 31 31 0 0 0 21 8.2zM10 15V9l5.2 3z"/></svg></a><a href="https://www.instagram.com/papirus_brice/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.8a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 9.9a3.9 3.9 0 1 1 0-7.8 3.9 3.9 0 0 1 0 7.8zm7.6-10.1a1.4 1.4 0 1 1-2.8 0 1.4 1.4 0 0 1 2.8 0z"/></svg></a><a href="https://www.tiktok.com/@papirusbrice" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 2h-3.1v13.2a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.6a5.7 5.7 0 0 0-.8-.1 5.7 5.7 0 1 0 5.7 5.7V8.9a7 7 0 0 0 4.1 1.3V7.1a4.1 4.1 0 0 1-4.1-4.1z"/></svg></a><a href="https://www.snapchat.com/add/masterprotech" target="_blank" rel="noopener" aria-label="Snapchat"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3Q17 3 17 8.5V12.5L18.2 11.9Q19 11.6 18.6 12.5Q18 13.4 17.2 13.9Q16.7 14.2 16.6 14.8V15.6Q16.6 16.2 16 16.2Q15.2 16.2 14.6 16.7Q14 17.2 13.3 17.2Q12.6 17.2 12 16.8Q11.4 17.2 10.7 17.2Q10 17.2 9.4 16.7Q8.8 16.2 8 16.2Q7.4 16.2 7.4 15.6V14.8Q7.3 14.2 6.8 13.9Q6 13.4 5.4 12.5Q5 11.6 5.8 11.9L7 12.5V8.5Q7 3 12 3Z"/></svg></a><a href="https://x.com/rusricehero" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.2l-7 8 8.2 10h-6.4l-5-6.2L4.8 21H1.6l7.5-8.6L1.2 3h6.6l4.5 5.6zm-1.1 16.1h1.8L7.7 4.8H5.8z"/></svg></a></div>
       </div>
       <div>
         <h4>Formations</h4>
-        <div class="footer__links"><a href="formations/initiation-informatique.html">Initiation à l'informatique</a><a href="formations/secretariat-bureautique.html">Secrétariat bureautique</a><a href="formations/graphisme-design.html">Graphisme &amp; design</a><a href="formations/maintenance-informatique-reseaux.html">Maintenance informatique &amp; réseaux</a><a href="formations/mecanographie-copieurs.html">Mécanographie &amp; copieurs</a><a href="formations.html">Toutes les filières</a></div>
+        <div class="footer__links"><a href="/master-professionnel-site/formations/initiation-informatique.html">Initiation à l'informatique</a><a href="/master-professionnel-site/formations/secretariat-bureautique.html">Secrétariat bureautique</a><a href="/master-professionnel-site/formations/graphisme-design.html">Graphisme &amp; design</a><a href="/master-professionnel-site/formations/maintenance-informatique-reseaux.html">Maintenance informatique &amp; réseaux</a><a href="/master-professionnel-site/formations/mecanographie-copieurs.html">Mécanographie &amp; copieurs</a><a href="/master-professionnel-site/formations.html">Toutes les filières</a></div>
       </div>
       <div>
         <h4>Le centre</h4>
         <div class="footer__links">
-          <a href="services.html">Nos services</a>
-          <a href="formations.html">Formations</a>
-          <a href="publications.html">Livres &amp; manuels</a>
-          <a href="inscriptions.html">Inscriptions</a>
-          <a href="galerie.html">Galerie photos</a>
-          <a href="espace/index.html">Espace apprenant</a>
-          <a href="avis.html">Avis des apprenants</a>
-          <a href="a-propos.html">À propos</a>
-          <a href="contact.html">Contact</a>
+          <a href="/master-professionnel-site/services.html">Nos services</a>
+          <a href="/master-professionnel-site/formations.html">Formations</a>
+          <a href="/master-professionnel-site/publications.html">Livres &amp; manuels</a>
+          <a href="/master-professionnel-site/inscriptions.html">Inscriptions</a>
+          <a href="/master-professionnel-site/galerie.html">Galerie photos</a>
+          <a href="/master-professionnel-site/espace/index.html">Espace apprenant</a>
+          <a href="/master-professionnel-site/avis.html">Avis des apprenants</a>
+          <a href="/master-professionnel-site/a-propos.html">À propos</a>
+          <a href="/master-professionnel-site/contact.html">Contact</a>
         </div>
       </div>
       <div>
@@ -84,8 +108,8 @@
     <div class="footer__bottom">
       <p>© <span data-year>2026</span> Master Professionnel. Tous droits réservés. — IFU 0202213971151 · RCCM RB-ABC-22-A-40203</p>
       <nav aria-label="Liens légaux">
-        <a href="mentions-legales.html">Mentions légales</a>
-        <a href="confidentialite.html">Confidentialité</a>
+        <a href="/master-professionnel-site/mentions-legales.html">Mentions légales</a>
+        <a href="/master-professionnel-site/confidentialite.html">Confidentialité</a>
       </nav>
     </div>
   </div>
@@ -96,7 +120,7 @@
 <button class="to-top" type="button" aria-label="Revenir en haut de la page">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
 </button>
-<script src="assets/js/main.js" defer></script>
+<script src="/master-professionnel-site/assets/js/main.js" defer></script>
 
 </body>
 </html>

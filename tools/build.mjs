@@ -1324,16 +1324,39 @@ ${pageHead(
 /* -------------------------------------------------------------------- 404 */
 const notFound = () =>
   layout({
+    base: "/master-professionnel-site/",
     title: "Page introuvable — Master Professionnel",
     description: "La page demandée n'existe pas ou a été déplacée.",
-    body: `<section class="page-head"><div class="container"><h1>Page introuvable</h1>
-    <p class="lead" style="color:#C6D6F2">Cette page n'existe pas ou a été déplacée.</p></div></section>
+    body: `<section class="page-head"><div class="container">
+      <h1 id="t404">Page introuvable</h1>
+      <p class="lead" id="m404" style="color:#C6D6F2">Cette page n'existe pas ou a été déplacée.</p>
+    </div></section>
     <section class="section"><div class="container" style="text-align:center">
-    <p class="lead" style="max-width:46ch;margin:0 auto 24px">Retournez à l'accueil ou parcourez nos filières de formation.</p>
-    <div class="btn-row" style="justify-content:center"><a class="btn" href="index.html">Accueil ${icon(
-      "arrow"
-    )}</a><a class="btn btn--outline" href="formations.html">Les formations</a></div>
-    </div></section>`,
+      <p class="lead" id="aide404" style="max-width:52ch;margin:0 auto 24px">Retournez à l'accueil, consultez nos formations, ou connectez-vous à votre espace.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn" href="/master-professionnel-site/index.html">Accueil ${icon("arrow")}</a>
+        <a class="btn btn--outline" href="/master-professionnel-site/espace/index.html">Espace apprenant</a>
+        <a class="btn btn--outline" href="/master-professionnel-site/formations.html">Les formations</a>
+      </div>
+      <p class="form__note" id="redir404" style="margin-top:18px"></p>
+    </div></section>
+    <script>
+    (function () {
+      if (!/confirmation|verify|espace/i.test(location.pathname)) return;
+      document.getElementById("t404").textContent = "Ce lien n'est plus valide";
+      document.getElementById("m404").textContent = "Le lien de confirmation a expiré ou a déjà été utilisé.";
+      document.getElementById("aide404").textContent = "Aucune inquiétude : votre compte existe. Connectez-vous avec votre e-mail et votre mot de passe.";
+      var cible = "/master-professionnel-site/espace/index.html";
+      var note = document.getElementById("redir404");
+      var reste = 5;
+      note.textContent = "Redirection vers la connexion dans " + reste + " secondes…";
+      var t = setInterval(function () {
+        reste -= 1;
+        if (reste <= 0) { clearInterval(t); location.href = cible; return; }
+        note.textContent = "Redirection vers la connexion dans " + reste + " secondes…";
+      }, 1000);
+    })();
+    </script>`,
   });
 
 /* ------------------------------------------------------------------ écriture */
