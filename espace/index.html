@@ -28,6 +28,7 @@
     </div>
 
     <div id="alert" class="alert" hidden></div>
+    <div id="statut-js" class="alert alert--info">Chargement du module…</div>
 
     <form id="form-login" class="form-grid" novalidate>
       <div class="field"><label for="l-email">E-mail</label><input id="l-email" type="email" autocomplete="email" required placeholder="vous@exemple.com"></div>
@@ -46,12 +47,23 @@
 
   <p class="app-sub" style="font-size:.8rem">En créant un compte, vous acceptez notre
     <a href="../confidentialite.html">politique de confidentialité</a>. Vos données servent uniquement au suivi de votre inscription.</p>
-  <p class="app-sub" style="font-size:.72rem;opacity:.75" id="statut-js">Chargement du module…</p>
 </main>
 
+<script>
+/* Filet de sécurité : si le module ES n'a pas démarré (cache, blocage), on le dit. */
+setTimeout(function () {
+  var el = document.getElementById("statut-js");
+  if (el && !window.__MP_OK) {
+    el.className = "alert alert--error";
+    el.textContent =
+      "Le script de l'espace n'a pas démarré. Recharge la page avec Ctrl+Shift+R, ou désactive le bloqueur de publicité / VPN, puis réessaie.";
+  }
+}, 4000);
+</script>
+
 <script type="module">
-import { configured, inscription, connexion, session, messageErreur, testerConnexion } from "./assets/api.js?v=4";
-import { $, alerte } from "./assets/ui.js?v=4";
+import { configured, inscription, connexion, session, messageErreur, testerConnexion } from "./assets/api.js?v=5";
+import { $, alerte } from "./assets/ui.js?v=5";
 
 const zone = $("#alert");
 const formLogin = $("#form-login");
@@ -64,19 +76,29 @@ function afficher(texte, type) {
 }
 
 const statut = $("#statut-js");
-if (statut) statut.textContent = configured ? "Client v3 prêt · Supabase configuré" : "Client v3 · configuration Supabase manquante";
+window.__MP_OK = true;
 
-if (configured) {
+function etat(texte, type) {
+  if (!statut) return;
+  statut.textContent = texte;
+  statut.className = "alert alert--" + (type || "info");
+}
+
+if (!configured) {
+  etat("Client v5 · configuration Supabase manquante dans config.js", "error");
+} else {
+  etat("Client v5 · test de liaison à Supabase…", "info");
   testerConnexion()
     .then((code) => {
-      statut.textContent =
-        code === 200
-          ? "Client v3 · Supabase joignable ✓"
-          : "Client v3 · Supabase répond " + code + " (vérifie la clé)";
+      if (code === 200) etat("Client v5 · Supabase joignable ✓ — vous pouvez créer votre compte.", "ok");
+      else etat("Client v5 · Supabase répond " + code + " : la clé publishable est probablement invalide.", "error");
     })
-    .catch(() => {
-      statut.textContent = "Client v3 · Supabase INJOIGNABLE (réseau ou blocage du navigateur)";
-    });
+    .catch(() =>
+      etat(
+        "Client v5 · Supabase INJOIGNABLE : réseau, VPN ou bloqueur de publicité. Essayez depuis un autre réseau.",
+        "error"
+      )
+    );
 }
 
 window.addEventListener("error", (e) => afficher("Erreur technique : " + e.message, "error"));
