@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
     }
 
     const { session_id, jeton } = await req.json();
-    if (!session_id || !jeton) {
+    if (!session_id) {
       return new Response(JSON.stringify({ error: "Parametres manquants" }), {
         status: 400,
         headers: { ...CORS, "Content-Type": "application/json" },
@@ -92,13 +92,17 @@ Deno.serve(async (req) => {
     const moderateur = estAdmin === true;
 
     // Invitation nominative (RLS : l'utilisateur ne voit que les siennes)
-    const { data: invitations } = await supabase
-      .from("invitations")
-      .select("id, session_id")
-      .eq("session_id", session_id)
-      .eq("user_id", uid)
-      .eq("jeton", jeton)
-      .limit(1);
+    let invitations = [];
+    if (jeton) {
+      const { data } = await supabase
+        .from("invitations")
+        .select("id, session_id")
+        .eq("session_id", session_id)
+        .eq("user_id", uid)
+        .eq("jeton", jeton)
+        .limit(1);
+      invitations = data || [];
+    }
 
     if (!moderateur && (!invitations || invitations.length === 0)) {
       return new Response(JSON.stringify({ error: "Invitation invalide pour cette session" }), {

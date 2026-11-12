@@ -84,8 +84,8 @@
 
 <script src="assets/config.js"></script>
 <script type="module">
-import { sessionValide, select, insertion, modification, rpc, deconnexion, messageErreur } from "./assets/api.js?v=11";
-import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=11";
+import { sessionValide, select, insertion, modification, rpc, deconnexion, messageErreur } from "./assets/api.js?v=12";
+import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=12";
 
 const zone = $("#alert");
 const corps = $("#corps");
@@ -253,6 +253,7 @@ if (!profil || profil.role !== "admin") {
           }${s.statut === "annulee" ? " · annulée" : ""}</small>
             </div>
             <div class="actions">
+              <button class="btn-mini" type="button" data-ouvrir="${s.id}">Ouvrir la salle</button>
               <button class="btn-mini btn-mini--ok" type="button" data-inviter="${s.id}">Inviter</button>
               <button class="btn-mini btn-mini--ko" type="button" data-annuler="${s.id}">Annuler</button>
             </div>
@@ -294,9 +295,13 @@ if (!profil || profil.role !== "admin") {
   });
 
   $("#liste-sessions").addEventListener("click", async (e) => {
+    const ouvrir = e.target.closest("[data-ouvrir]");
     const inviter = e.target.closest("[data-inviter]");
     const annuler = e.target.closest("[data-annuler]");
     try {
+      if (ouvrir) {
+        window.open("salle.html?s=" + encodeURIComponent(ouvrir.dataset.ouvrir), "_blank");
+      }
       if (inviter) {
         inviter.disabled = true;
         const nb = await rpc("inviter_apprenants", { p_session: inviter.dataset.inviter }, token);

@@ -199,7 +199,13 @@ export async function rpc(nom, params, token) {
 
 /* Appel d'une Edge Function (serveur) */
 export async function fonction(nom, corps, token) {
-  return requete("/functions/v1/" + nom, { method: "POST", body: corps || {}, token });
+  try {
+    return await requete("/functions/v1/" + nom, { method: "POST", body: corps || {}, token });
+  } catch (e) {
+    throw new Error(
+      "Fonction « " + nom + " » : " + (e.message || e) + " — vérifiez qu'elle est bien déployée dans Supabase."
+    );
+  }
 }
 
 /* Test de liaison : renvoie le code HTTP de l'API REST (200 = tout va bien). */

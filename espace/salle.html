@@ -38,7 +38,7 @@
 
 <script src="assets/config.js"></script>
 <script type="module">
-import { sessionValide, fonction, messageErreur } from "./assets/api.js?v=10";
+import { sessionValide, fonction, messageErreur } from "./assets/api.js?v=12";
 
 const params = new URLSearchParams(location.search);
 const sessionId = params.get("s");
@@ -53,7 +53,7 @@ function erreur(titre, texte) {
   document.getElementById("m-texte").textContent = texte;
 }
 
-if (!sessionId || !jeton) {
+if (!sessionId) {
   erreur("Lien incomplet", "Ce lien de cours est incomplet. Ouvrez-le depuis votre espace apprenant.");
 } else {
   const session = await sessionValide();
