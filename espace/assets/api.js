@@ -110,10 +110,12 @@ export function utilisateur() {
 /* ---------------- authentification ---------------- */
 
 export async function inscription(email, motDePasse, meta) {
-  /* Adresse de retour après clic sur le lien de confirmation */
+  /* Adresse de retour après clic sur le lien de confirmation.
+     On la déduit du dossier courant (et non de location.origin, qui perd
+     le sous-dossier /master-professionnel-site/ de GitHub Pages). */
   let chemin = "/auth/v1/signup";
   if (location.protocol === "http:" || location.protocol === "https:") {
-    const retour = location.origin + "/espace/confirmation.html";
+    const retour = new URL("confirmation.html", location.href).href;
     chemin += "?redirect_to=" + encodeURIComponent(retour);
   }
   const d = await requete(chemin, {
