@@ -2,6 +2,9 @@
 (function () {
   "use strict";
 
+  /* si ce script ne s'execute pas, rien n'est masque */
+  document.documentElement.classList.add("js-anim");
+
   var body = document.body;
   var header = document.querySelector(".header");
   var burger = document.querySelector(".burger");

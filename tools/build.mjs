@@ -209,7 +209,6 @@ function layout({ base = "", active = "", title, description, body, extraHead = 
 <link rel="icon" href="${base}assets/brand/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="${base}assets/brand/apple-touch-icon.png">
 <link rel="stylesheet" href="${base}assets/css/style.css">
-<script>document.documentElement.classList.add("js");</script>
 ${extraHead}${jsonld}
 </head>
 <body>
