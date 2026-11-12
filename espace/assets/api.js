@@ -192,6 +192,16 @@ export async function modification(table, filtre, champs, token) {
   return d;
 }
 
+/* Appel d'une fonction SQL (RPC) */
+export async function rpc(nom, params, token) {
+  return requete("/rest/v1/rpc/" + nom, { method: "POST", body: params || {}, token });
+}
+
+/* Appel d'une Edge Function (serveur) */
+export async function fonction(nom, corps, token) {
+  return requete("/functions/v1/" + nom, { method: "POST", body: corps || {}, token });
+}
+
 /* Test de liaison : renvoie le code HTTP de l'API REST (200 = tout va bien). */
 export async function testerConnexion() {
   const r = await fetch(URL_BASE + "/rest/v1/formations?select=id&limit=1", {

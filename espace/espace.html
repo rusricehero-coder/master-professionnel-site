@@ -63,12 +63,18 @@
       <p class="vide">Chargement…</p>
     </div>
   </section>
+  <section class="app-card">
+    <h2>Mes cours en direct</h2>
+    <div id="mes-cours" class="liste" style="margin-top:14px">
+      <p class="vide">Chargement…</p>
+    </div>
+  </section>
 </main>
 
 <script src="assets/config.js"></script>
 <script type="module">
-import { sessionValide, select, insertion, deconnexion, messageErreur } from "./assets/api.js?v=8";
-import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=8";
+import { sessionValide, select, insertion, deconnexion, messageErreur } from "./assets/api.js?v=10";
+import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=10";
 
 const zone = $("#alert");
 const session = await sessionValide();
@@ -141,6 +147,53 @@ async function charger() {
   }
 }
 charger();
+
+/* Mes cours en direct */
+async function chargerCours() {
+  const box = $("#mes-cours");
+  if (!box) return;
+  try {
+    const data = await select(
+      "invitations",
+      "select=session_id,jeton,sessions(titre,debut,duree_min,statut)&user_id=eq." + uid,
+      token
+    );
+    if (!data || !data.length) {
+      box.innerHTML = '<p class="vide">Aucun cours en direct programmé pour l\'instant.</p>';
+      return;
+    }
+    box.innerHTML = data
+      .map((inv) => {
+        const s = inv.sessions || {};
+        const debut = s.debut ? new Date(s.debut) : null;
+        const quand = debut
+          ? debut.toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })
+          : "—";
+        const annule = s.statut === "annulee";
+        const ouverture = debut ? debut.getTime() - 15 * 60000 : Infinity;
+        const fermeture = debut ? debut.getTime() + (s.duree_min || 60) * 60000 : 0;
+        const live = !annule && Date.now() >= ouverture && Date.now() <= fermeture;
+        const lien = "salle.html?s=" + encodeURIComponent(inv.session_id) + "&t=" + encodeURIComponent(inv.jeton);
+        return `<div class="ligne">
+          <div>
+            <strong>${echappe(s.titre || "Cours en direct")}</strong>
+            <small>${quand} · ${s.duree_min || 60} min</small>
+          </div>
+          <div>${
+            annule
+              ? '<span class="badge badge--refusee">Annulé</span>'
+              : live
+              ? '<a class="btn btn--sm" href="' + lien + '">Rejoindre</a>'
+              : '<span class="badge badge--attente">Programmé</span>'
+          }</div>
+        </div>`;
+      })
+      .join("");
+  } catch (e) {
+    box.innerHTML = '<p class="vide">' + echappe(messageErreur(e)) + "</p>";
+  }
+}
+chargerCours();
 
 /* Envoi */
 $("#form-inscription").addEventListener("submit", async (e) => {

@@ -33,6 +33,26 @@
 
   <section class="app-card">
     <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <h2>Cours en direct</h2>
+      <button class="btn-mini" type="button" id="toggle-session">Planifier une session</button>
+    </div>
+    <form id="form-session" class="form-grid" style="margin-top:16px" hidden>
+      <div class="form__row">
+        <div class="field"><label for="s-titre">Titre *</label><input id="s-titre" required placeholder="Ex. Réseaux — séance 3"></div>
+        <div class="field"><label for="s-formation">Filière</label><select id="s-formation"><option value="">Toutes filières</option></select></div>
+      </div>
+      <div class="form__row">
+        <div class="field"><label for="s-debut">Date et heure *</label><input id="s-debut" type="datetime-local" required></div>
+        <div class="field"><label for="s-places">Places (max 10)</label><input id="s-places" type="number" min="1" max="10" value="10"></div>
+      </div>
+      <div class="field"><label for="s-duree">Durée (minutes)</label><input id="s-duree" type="number" min="15" max="240" value="60"></div>
+      <button class="btn" type="submit">Créer la session</button>
+    </form>
+    <div id="liste-sessions" class="liste" style="margin-top:16px"><p class="vide">Chargement…</p></div>
+  </section>
+
+  <section class="app-card">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
       <h2>Demandes d'inscription</h2>
       <div class="actions">
         <select id="filtre" class="btn-mini" style="padding:8px 10px">
@@ -63,8 +83,8 @@
 
 <script src="assets/config.js"></script>
 <script type="module">
-import { sessionValide, select, modification, deconnexion, messageErreur } from "./assets/api.js?v=8";
-import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=8";
+import { sessionValide, select, insertion, modification, rpc, deconnexion, messageErreur } from "./assets/api.js?v=10";
+import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=10";
 
 const zone = $("#alert");
 const corps = $("#corps");
@@ -174,6 +194,118 @@ if (!profil || profil.role !== "admin") {
     lien.click();
     URL.revokeObjectURL(lien.href);
   });
+
+  /* ---------- Cours en direct ---------- */
+  const formSession = $("#form-session");
+  $("#toggle-session").addEventListener("click", () => {
+    formSession.hidden = !formSession.hidden;
+  });
+
+  try {
+    const listeFormations = await select("formations", "select=id,nom&actif=eq.true&order=nom.asc", token);
+    const choix = $("#s-formation");
+    (listeFormations || []).forEach((f) => {
+      const o = document.createElement("option");
+      o.value = f.id;
+      o.textContent = f.nom;
+      choix.appendChild(o);
+    });
+  } catch (e) {
+    /* catalogue indisponible : on laisse « Toutes filières » */
+  }
+
+  async function chargerSessions() {
+    const box = $("#liste-sessions");
+    try {
+      const [sessions, invits] = await Promise.all([
+        select(
+          "sessions",
+          "select=id,titre,debut,duree_min,places,statut,salle,formations(nom)&order=debut.desc",
+          token
+        ),
+        select("invitations", "select=session_id", token),
+      ]);
+      const compte = {};
+      (invits || []).forEach((i) => {
+        compte[i.session_id] = (compte[i.session_id] || 0) + 1;
+      });
+      if (!sessions || !sessions.length) {
+        box.innerHTML = '<p class="vide">Aucune session planifiée pour le moment.</p>';
+        return;
+      }
+      box.innerHTML = sessions
+        .map((s) => {
+          const quand = new Date(s.debut).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
+          return `<div class="ligne">
+            <div>
+              <strong>${echappe(s.titre)}</strong>
+              <small>${quand} · ${s.duree_min} min · ${compte[s.id] || 0}/${s.places} invités${
+            s.formations ? " · " + echappe(s.formations.nom) : ""
+          }${s.statut === "annulee" ? " · annulée" : ""}</small>
+            </div>
+            <div class="actions">
+              <button class="btn-mini btn-mini--ok" type="button" data-inviter="${s.id}">Inviter</button>
+              <button class="btn-mini btn-mini--ko" type="button" data-annuler="${s.id}">Annuler</button>
+            </div>
+          </div>`;
+        })
+        .join("");
+    } catch (e) {
+      box.innerHTML = '<p class="vide">' + echappe(messageErreur(e)) + "</p>";
+    }
+  }
+
+  formSession.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const bouton = e.target.querySelector("button");
+    bouton.disabled = true;
+    try {
+      const salle = "mp-" + Math.random().toString(36).slice(2, 10);
+      await insertion(
+        "sessions",
+        {
+          titre: $("#s-titre").value.trim(),
+          formation_id: $("#s-formation").value ? Number($("#s-formation").value) : null,
+          debut: new Date($("#s-debut").value).toISOString(),
+          duree_min: Number($("#s-duree").value) || 60,
+          places: Number($("#s-places").value) || 10,
+          salle,
+        },
+        token
+      );
+      alerte(zone, "Session créée.", "ok");
+      formSession.reset();
+      formSession.hidden = true;
+      chargerSessions();
+    } catch (err) {
+      alerte(zone, messageErreur(err), "error");
+    } finally {
+      bouton.disabled = false;
+    }
+  });
+
+  $("#liste-sessions").addEventListener("click", async (e) => {
+    const inviter = e.target.closest("[data-inviter]");
+    const annuler = e.target.closest("[data-annuler]");
+    try {
+      if (inviter) {
+        inviter.disabled = true;
+        const nb = await rpc("inviter_apprenants", { p_session: inviter.dataset.inviter }, token);
+        alerte(zone, nb + " invitation(s) créée(s) pour cette session.", "ok");
+        chargerSessions();
+      }
+      if (annuler) {
+        annuler.disabled = true;
+        await modification("sessions", "id=eq." + annuler.dataset.annuler, { statut: "annulee" }, token);
+        alerte(zone, "Session annulée.", "ok");
+        chargerSessions();
+      }
+    } catch (err) {
+      alerte(zone, messageErreur(err), "error");
+    }
+  });
+
+  chargerSessions();
 
   charger();
 }
