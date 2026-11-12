@@ -1,4 +1,7 @@
 /* ---------- Espace membre : styles complémentaires ---------- */
+/* sans cette règle, display:grid des formulaires écrase l'attribut hidden */
+[hidden] { display: none !important; }
+
 body.app { background: var(--bg); min-height: 100vh; }
 
 .app-header {

@@ -46,11 +46,12 @@
 
   <p class="app-sub" style="font-size:.8rem">En créant un compte, vous acceptez notre
     <a href="../confidentialite.html">politique de confidentialité</a>. Vos données servent uniquement au suivi de votre inscription.</p>
+  <p class="app-sub" style="font-size:.72rem;opacity:.75" id="statut-js">Chargement du module…</p>
 </main>
 
 <script type="module">
-import { configured, inscription, connexion, session, messageErreur } from "./assets/api.js";
-import { $, alerte } from "./assets/ui.js";
+import { configured, inscription, connexion, session, messageErreur, testerConnexion } from "./assets/api.js?v=4";
+import { $, alerte } from "./assets/ui.js?v=4";
 
 const zone = $("#alert");
 const formLogin = $("#form-login");
@@ -61,6 +62,27 @@ const tabSignup = $("#tab-signup");
 function afficher(texte, type) {
   alerte(zone, texte, type || "info");
 }
+
+const statut = $("#statut-js");
+if (statut) statut.textContent = configured ? "Client v3 prêt · Supabase configuré" : "Client v3 · configuration Supabase manquante";
+
+if (configured) {
+  testerConnexion()
+    .then((code) => {
+      statut.textContent =
+        code === 200
+          ? "Client v3 · Supabase joignable ✓"
+          : "Client v3 · Supabase répond " + code + " (vérifie la clé)";
+    })
+    .catch(() => {
+      statut.textContent = "Client v3 · Supabase INJOIGNABLE (réseau ou blocage du navigateur)";
+    });
+}
+
+window.addEventListener("error", (e) => afficher("Erreur technique : " + e.message, "error"));
+window.addEventListener("unhandledrejection", (e) =>
+  afficher("Erreur : " + ((e.reason && e.reason.message) || e.reason), "error")
+);
 
 if (!configured) {
   afficher("Espace non configuré : la clé Supabase est absente de espace/assets/config.js.", "error");

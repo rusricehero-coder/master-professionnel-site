@@ -152,6 +152,14 @@ export async function modification(table, filtre, champs, token) {
   return d;
 }
 
+/* Test de liaison : renvoie le code HTTP de l'API REST (200 = tout va bien). */
+export async function testerConnexion() {
+  const r = await fetch(URL_BASE + "/rest/v1/formations?select=id&limit=1", {
+    headers: { apikey: CLE },
+  });
+  return r.status;
+}
+
 /* Message d'erreur lisible */
 export function messageErreur(err) {
   const m = (err && err.message) || "";
