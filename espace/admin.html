@@ -62,113 +62,120 @@
 </main>
 
 <script type="module">
-import { supabase, configured } from "./assets/supabase.js";
-import { $, alerte, dateFr, badgeStatut, echappe, deconnecter } from "./assets/ui.js";
+import { sessionValide, select, modification, deconnexion, messageErreur } from "./assets/api.js";
+import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js";
 
 const zone = $("#alert");
 const corps = $("#corps");
 let donnees = [];
 
-if (!configured) alerte(zone, "Clés Supabase manquantes.", "error");
-
-const {
-  data: { session },
-} = await supabase.auth.getSession();
+const session = await sessionValide();
 if (!session) window.location.href = "index.html";
 
-const { data: profil } = await supabase.from("profiles").select("nom, role").eq("id", session.user.id).single();
+const token = session.access_token;
+const uid = session.user.id;
+
+let profil = null;
+try {
+  const lignes = await select("profiles", "select=nom,role&id=eq." + uid, token);
+  profil = lignes && lignes[0];
+} catch (e) {
+  /* ignoré : traité plus bas */
+}
+
 if (!profil || profil.role !== "admin") {
   $("#refus").hidden = false;
-  throw new Error("acces refuse");
-}
+} else {
+  $("#contenu").hidden = false;
+  $("#nom-admin").textContent = profil.nom || session.user.email;
+  $("#deconnexion").addEventListener("click", deconnexion);
 
-$("#contenu").hidden = false;
-$("#nom-admin").textContent = profil.nom || session.user.email;
-$("#deconnexion").addEventListener("click", () => deconnecter(supabase));
-
-async function charger() {
-  const { data, error } = await supabase
-    .from("inscriptions")
-    .select("id, statut, created_at, rythme, message, profiles(nom, telephone, email), formations(nom)")
-    .order("created_at", { ascending: false });
-  if (error) {
-    corps.innerHTML = `<tr><td colspan="6" class="vide">Erreur : ${echappe(error.message)}</td></tr>`;
-    return;
+  async function charger() {
+    try {
+      const data = await select(
+        "inscriptions",
+        "select=id,statut,created_at,rythme,message,profiles(nom,telephone,email),formations(nom)&order=created_at.desc",
+        token
+      );
+      donnees = data || [];
+      $("#stat-total").textContent = donnees.length;
+      $("#stat-attente").textContent = donnees.filter((d) => d.statut === "en_attente").length;
+      $("#stat-valide").textContent = donnees.filter((d) => d.statut === "validee").length;
+      afficher();
+    } catch (e) {
+      corps.innerHTML = `<tr><td colspan="6" class="vide">Erreur : ${echappe(messageErreur(e))}</td></tr>`;
+    }
   }
-  donnees = data || [];
-  const total = donnees.length;
-  const attente = donnees.filter((d) => d.statut === "en_attente").length;
-  const valide = donnees.filter((d) => d.statut === "validee").length;
-  $("#stat-total").textContent = total;
-  $("#stat-attente").textContent = attente;
-  $("#stat-valide").textContent = valide;
-  afficher();
-}
 
-function afficher() {
-  const filtre = $("#filtre").value;
-  const liste = donnees.filter((d) => filtre === "tous" || d.statut === filtre);
-  if (!liste.length) {
-    corps.innerHTML = '<tr><td colspan="6" class="vide">Aucune demande dans cette catégorie.</td></tr>';
-    return;
+  function afficher() {
+    const filtre = $("#filtre").value;
+    const liste = donnees.filter((d) => filtre === "tous" || d.statut === filtre);
+    if (!liste.length) {
+      corps.innerHTML = '<tr><td colspan="6" class="vide">Aucune demande dans cette catégorie.</td></tr>';
+      return;
+    }
+    corps.innerHTML = liste
+      .map((d) => {
+        const p = d.profiles || {};
+        return `<tr>
+          <td>${dateFr(d.created_at)}</td>
+          <td><strong>${echappe(p.nom || "—")}</strong><br><small>${echappe(p.telephone || "")}<br>${echappe(p.email || "")}</small></td>
+          <td>${echappe((d.formations && d.formations.nom) || "—")}</td>
+          <td>${echappe(d.rythme || "—")}</td>
+          <td>${badgeStatut(d.statut)}</td>
+          <td><div class="actions">
+            <button class="btn-mini btn-mini--ok" data-statut="validee" data-id="${d.id}">Valider</button>
+            <button class="btn-mini btn-mini--ko" data-statut="refusee" data-id="${d.id}">Refuser</button>
+            <button class="btn-mini" data-statut="en_attente" data-id="${d.id}">En attente</button>
+          </div></td>
+        </tr>`;
+      })
+      .join("");
   }
-  corps.innerHTML = liste
-    .map((d) => {
-      const p = d.profiles || {};
-      return `<tr>
-        <td>${dateFr(d.created_at)}</td>
-        <td><strong>${echappe(p.nom || "—")}</strong><br><small>${echappe(p.telephone || "")}<br>${echappe(p.email || "")}</small></td>
-        <td>${echappe(d.formations?.nom || "—")}</td>
-        <td>${echappe(d.rythme || "—")}</td>
-        <td>${badgeStatut(d.statut)}</td>
-        <td><div class="actions">
-          <button class="btn-mini btn-mini--ok" data-statut="validee" data-id="${d.id}">Valider</button>
-          <button class="btn-mini btn-mini--ko" data-statut="refusee" data-id="${d.id}">Refuser</button>
-          <button class="btn-mini" data-statut="en_attente" data-id="${d.id}">Remettre en attente</button>
-        </div></td>
-      </tr>`;
-    })
-    .join("");
-}
 
-corps.addEventListener("click", async (e) => {
-  const bouton = e.target.closest("button[data-statut]");
-  if (!bouton) return;
-  const { id, statut } = bouton.dataset;
-  bouton.disabled = true;
-  const { error } = await supabase.from("inscriptions").update({ statut }).eq("id", id);
-  bouton.disabled = false;
-  if (error) return alerte(zone, "Mise à jour impossible : " + error.message, "error");
-  alerte(zone, "Statut mis à jour.", "ok");
-  charger();
-});
-
-$("#filtre").addEventListener("change", afficher);
-
-$("#export").addEventListener("click", () => {
-  const lignes = [["Date", "Nom", "Telephone", "Email", "Filiere", "Rythme", "Statut", "Message"]];
-  donnees.forEach((d) => {
-    const p = d.profiles || {};
-    lignes.push([
-      dateFr(d.created_at),
-      p.nom || "",
-      p.telephone || "",
-      p.email || "",
-      d.formations?.nom || "",
-      d.rythme || "",
-      d.statut,
-      (d.message || "").replace(/\s+/g, " "),
-    ]);
+  corps.addEventListener("click", async (e) => {
+    const bouton = e.target.closest("button[data-statut]");
+    if (!bouton) return;
+    const { id, statut } = bouton.dataset;
+    bouton.disabled = true;
+    try {
+      await modification("inscriptions", "id=eq." + id, { statut }, token);
+      alerte(zone, "Statut mis à jour.", "ok");
+      await charger();
+    } catch (err) {
+      alerte(zone, "Mise à jour impossible : " + messageErreur(err), "error");
+    } finally {
+      bouton.disabled = false;
+    }
   });
-  const csv = lignes.map((l) => l.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";")).join("\r\n");
-  const lien = document.createElement("a");
-  lien.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" }));
-  lien.download = "inscriptions-master-professionnel.csv";
-  lien.click();
-  URL.revokeObjectURL(lien.href);
-});
 
-charger();
+  $("#filtre").addEventListener("change", afficher);
+
+  $("#export").addEventListener("click", () => {
+    const lignes = [["Date", "Nom", "Telephone", "Email", "Filiere", "Rythme", "Statut", "Message"]];
+    donnees.forEach((d) => {
+      const p = d.profiles || {};
+      lignes.push([
+        dateFr(d.created_at),
+        p.nom || "",
+        p.telephone || "",
+        p.email || "",
+        (d.formations && d.formations.nom) || "",
+        d.rythme || "",
+        d.statut,
+        (d.message || "").replace(/\s+/g, " "),
+      ]);
+    });
+    const csv = lignes.map((l) => l.map((v) => '"' + String(v).replace(/"/g, '""') + '"').join(";")).join("\r\n");
+    const lien = document.createElement("a");
+    lien.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" }));
+    lien.download = "inscriptions-master-professionnel.csv";
+    lien.click();
+    URL.revokeObjectURL(lien.href);
+  });
+
+  charger();
+}
 </script>
 </body>
 </html>

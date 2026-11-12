@@ -66,98 +66,110 @@
 </main>
 
 <script type="module">
-import { supabase, configured } from "./assets/supabase.js";
-import { $, alerte, dateFr, badgeStatut, echappe, deconnecter } from "./assets/ui.js";
+import { sessionValide, select, insertion, deconnexion, messageErreur } from "./assets/api.js";
+import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js";
 
 const zone = $("#alert");
-if (!configured) {
-  alerte(zone, "Espace en cours de configuration : clés Supabase manquantes.", "error");
-}
-
-const {
-  data: { session },
-} = await supabase.auth.getSession();
+const session = await sessionValide();
 if (!session) window.location.href = "index.html";
 
+const token = session.access_token;
 const uid = session.user.id;
-let profil = null;
 
 /* Profil */
-{
-  const { data } = await supabase.from("profiles").select("nom, email, telephone, role").eq("id", uid).single();
-  profil = data || { nom: session.user.email, email: session.user.email, role: "apprenant" };
-  $("#nom-utilisateur").textContent = profil.nom || profil.email;
-  $("#prenom").textContent = (profil.nom || "").split(" ")[0] || "";
-  $("#d-nom").textContent = profil.nom || "—";
-  $("#d-email").textContent = profil.email || session.user.email;
-  $("#d-tel").textContent = profil.telephone || "—";
-  if (profil.role === "admin") $("#lien-admin").hidden = false;
+let profil = { nom: session.user.email, email: session.user.email, telephone: "", role: "apprenant" };
+try {
+  const lignes = await select("profiles", "select=nom,email,telephone,role&id=eq." + uid, token);
+  if (lignes && lignes[0]) profil = lignes[0];
+} catch (e) {
+  alerte(zone, "Profil illisible : " + messageErreur(e), "error");
 }
+$("#nom-utilisateur").textContent = profil.nom || profil.email;
+$("#prenom").textContent = (profil.nom || "").split(" ")[0] || "";
+$("#d-nom").textContent = profil.nom || "—";
+$("#d-email").textContent = profil.email || session.user.email;
+$("#d-tel").textContent = profil.telephone || "—";
+if (profil.role === "admin") $("#lien-admin").hidden = false;
 
-$("#deconnexion").addEventListener("click", () => deconnecter(supabase));
+$("#deconnexion").addEventListener("click", deconnexion);
 
 /* Catalogue */
-const { data: formations } = await supabase.from("formations").select("id, nom, prix").eq("actif", true).order("nom");
-const select = $("#formation");
-select.innerHTML = '<option value="">Choisir une filière…</option>';
-(formations || []).forEach((f) => {
-  const o = document.createElement("option");
-  o.value = f.id;
-  o.textContent = f.nom + (f.prix ? " — " + f.prix : "");
-  select.appendChild(o);
-});
+const selectFormation = $("#formation");
+try {
+  const formations = await select("formations", "select=id,nom,prix&actif=eq.true&order=nom.asc", token);
+  selectFormation.innerHTML = '<option value="">Choisir une filière…</option>';
+  (formations || []).forEach((f) => {
+    const o = document.createElement("option");
+    o.value = f.id;
+    o.textContent = f.nom + (f.prix ? " — " + f.prix : "");
+    selectFormation.appendChild(o);
+  });
+} catch (e) {
+  selectFormation.innerHTML = '<option value="">Catalogue indisponible</option>';
+  alerte(zone, "Catalogue : " + messageErreur(e), "error");
+}
 
-/* Mes inscriptions */
+/* Mes demandes */
 async function charger() {
   const conteneur = $("#mes-inscriptions");
-  const { data, error } = await supabase
-    .from("inscriptions")
-    .select("id, statut, created_at, rythme, message, formations(nom)")
-    .eq("user_id", uid)
-    .order("created_at", { ascending: false });
-  if (error) {
-    conteneur.innerHTML = '<p class="vide">Impossible de charger vos demandes.</p>';
-    return;
+  try {
+    const data = await select(
+      "inscriptions",
+      "select=id,statut,created_at,rythme,message,formations(nom)&user_id=eq." +
+        uid +
+        "&order=created_at.desc",
+      token
+    );
+    if (!data || !data.length) {
+      conteneur.innerHTML = '<p class="vide">Aucune demande pour le moment. Choisissez une filière ci-dessus.</p>';
+      return;
+    }
+    conteneur.innerHTML = data
+      .map(
+        (i) => `<div class="ligne">
+          <div>
+            <strong>${echappe((i.formations && i.formations.nom) || "Filière")}</strong>
+            <small>Demande du ${dateFr(i.created_at)} · rythme ${echappe(i.rythme || "—")}</small>
+          </div>
+          <div>${badgeStatut(i.statut)}</div>
+        </div>`
+      )
+      .join("");
+  } catch (e) {
+    conteneur.innerHTML = '<p class="vide">Chargement impossible : ' + echappe(messageErreur(e)) + "</p>";
   }
-  if (!data || !data.length) {
-    conteneur.innerHTML = '<p class="vide">Aucune demande pour le moment. Choisissez une filière ci-dessus.</p>';
-    return;
-  }
-  conteneur.innerHTML = data
-    .map(
-      (i) => `<div class="ligne">
-        <div>
-          <strong>${echappe(i.formations?.nom || "Filière")}</strong>
-          <small>Demande du ${dateFr(i.created_at)} · rythme ${echappe(i.rythme || "—")}</small>
-        </div>
-        <div>${badgeStatut(i.statut)}</div>
-      </div>`
-    )
-    .join("");
 }
 charger();
 
-/* Nouvelle demande */
+/* Envoi */
 $("#form-inscription").addEventListener("submit", async (e) => {
   e.preventDefault();
   const bouton = e.target.querySelector("button");
-  const formationId = select.value;
-  if (!formationId) return alerte(zone, "Choisissez une filière.", "error");
+  const id = selectFormation.value;
+  if (!id) return alerte(zone, "Choisissez une filière.", "error");
   bouton.disabled = true;
   bouton.textContent = "Envoi…";
-  const { error } = await supabase.from("inscriptions").insert({
-    user_id: uid,
-    formation_id: Number(formationId),
-    rythme: $("#rythme").value,
-    message: $("#message").value.trim() || null,
-  });
-  bouton.disabled = false;
-  bouton.textContent = "Envoyer ma demande";
-  if (error) return alerte(zone, "Envoi impossible : " + error.message, "error");
-  alerte(zone, "Demande envoyée. Le centre vous contacte sous 48 h.", "ok");
-  $("#message").value = "";
-  select.value = "";
-  charger();
+  try {
+    await insertion(
+      "inscriptions",
+      {
+        user_id: uid,
+        formation_id: Number(id),
+        rythme: $("#rythme").value,
+        message: $("#message").value.trim() || null,
+      },
+      token
+    );
+    alerte(zone, "Demande envoyée. Le centre vous contacte sous 48 h.", "ok");
+    $("#message").value = "";
+    selectFormation.value = "";
+    charger();
+  } catch (err) {
+    alerte(zone, "Envoi impossible : " + messageErreur(err), "error");
+  } finally {
+    bouton.disabled = false;
+    bouton.textContent = "Envoyer ma demande";
+  }
 });
 </script>
 </body>
