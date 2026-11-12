@@ -110,12 +110,50 @@ export function utilisateur() {
 /* ---------------- authentification ---------------- */
 
 export async function inscription(email, motDePasse, meta) {
-  const d = await requete("/auth/v1/signup", {
+  /* Adresse de retour après clic sur le lien de confirmation */
+  let chemin = "/auth/v1/signup";
+  if (location.protocol === "http:" || location.protocol === "https:") {
+    const retour = location.origin + "/espace/confirmation.html";
+    chemin += "?redirect_to=" + encodeURIComponent(retour);
+  }
+  const d = await requete(chemin, {
     method: "POST",
     body: { email, password: motDePasse, data: meta || {} },
   });
   if (d && d.access_token) enregistre(d);
   return d;
+}
+
+/* Récupère la session contenue dans le lien de confirmation (#access_token=…) */
+export async function sessionDepuisLien() {
+  const brut = location.hash || "";
+  if (!brut || brut.indexOf("access_token") === -1) return null;
+  const p = new URLSearchParams(brut.replace(/^#/, ""));
+  const access = p.get("access_token");
+  const refresh = p.get("refresh_token");
+  if (!access) return null;
+  const s = enregistre({
+    access_token: access,
+    refresh_token: refresh,
+    expires_in: Number(p.get("expires_in") || 3600),
+    user: null,
+  });
+  try {
+    s.user = await requete("/auth/v1/user", { token: access });
+    localStorage.setItem(CLE_SESSION, JSON.stringify(s));
+  } catch {
+    /* le jeton reste utilisable, l'utilisateur sera chargé plus tard */
+  }
+  return s;
+}
+
+/* Lit une éventuelle erreur renvoyée dans le lien (#error=access_denied…) */
+export function erreurDepuisLien() {
+  const brut = location.hash || "";
+  if (!brut) return "";
+  const p = new URLSearchParams(brut.replace(/^#/, ""));
+  if (p.get("error")) return p.get("error_description") || p.get("error");
+  return "";
 }
 
 export async function connexion(email, motDePasse) {

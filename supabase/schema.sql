@@ -71,7 +71,9 @@ create policy "profil mise a jour" on public.profiles
   for update using (id = auth.uid() or public.is_admin())
   with check (id = auth.uid() or public.is_admin());
 
--- Empêche un apprenant de se promouvoir administrateur
+-- Empêche un apprenant de se promouvoir administrateur.
+-- La protection ne s'applique qu'aux requêtes venant du site (auth.uid() renseigné) :
+-- dans le SQL Editor, auth.uid() est vide, ce qui permet la promotion manuelle.
 create or replace function public.proteger_role()
 returns trigger
 language plpgsql
@@ -79,7 +81,7 @@ security definer
 set search_path = public
 as $$
 begin
-  if not public.is_admin() then
+  if auth.uid() is not null and not public.is_admin() then
     new.role := old.role;
   end if;
   return new;

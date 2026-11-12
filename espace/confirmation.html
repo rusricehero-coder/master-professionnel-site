@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Confirmation — Espace apprenant Master Professionnel</title>
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="assets/espace.css">
+</head>
+<body class="app">
+<header class="app-header">
+  <div class="app-header__inner">
+    <a href="../index.html"><img src="../assets/brand/logo-horizontal.svg" alt="Master Professionnel"></a>
+    <a class="btn btn--sm btn--outline app-header__spacer" href="../index.html">← Retour au site</a>
+  </div>
+</header>
+
+<main class="app-main" style="max-width:560px">
+  <div class="app-card" style="text-align:center;padding:38px 30px">
+    <div id="icone" style="font-size:2.6rem;line-height:1;margin-bottom:10px">✓</div>
+    <h1 class="app-title" id="titre" style="font-size:1.5rem">Vérification…</h1>
+    <p class="app-sub" id="texte" style="margin-bottom:24px">Nous vérifions votre lien de confirmation.</p>
+    <a class="btn" id="action" href="index.html" hidden>Se connecter</a>
+  </div>
+</main>
+
+<script src="assets/config.js"></script>
+<script type="module">
+import { sessionDepuisLien, erreurDepuisLien, session } from "./assets/api.js?v=7";
+
+const titre = document.getElementById("titre");
+const texte = document.getElementById("texte");
+const action = document.getElementById("action");
+const icone = document.getElementById("icone");
+
+const erreur = erreurDepuisLien();
+if (erreur) {
+  icone.textContent = "⚠";
+  titre.textContent = "Lien invalide ou expiré";
+  texte.textContent = "Ce lien de confirmation n'est plus valable. Connectez-vous : si votre adresse n'est pas confirmée, contactez le centre.";
+  action.hidden = false;
+  action.textContent = "Aller à la connexion";
+  action.href = "index.html";
+} else {
+  const s = await sessionDepuisLien();
+  if (s) {
+    icone.textContent = "✓";
+    titre.textContent = "Adresse e-mail confirmée";
+    texte.textContent =
+      "Votre adresse est confirmée. Vous êtes déjà connecté : vous pouvez accéder directement à votre espace Master Professionnel.";
+    action.hidden = false;
+    action.textContent = "Accéder à mon espace";
+    action.href = "espace.html";
+    setTimeout(() => {
+      window.location.href = "espace.html";
+    }, 4000);
+  } else if (session()) {
+    titre.textContent = "Adresse déjà confirmée";
+    texte.textContent = "Vous êtes déjà connecté à votre espace.";
+    action.hidden = false;
+    action.textContent = "Accéder à mon espace";
+    action.href = "espace.html";
+  } else {
+    icone.textContent = "✓";
+    titre.textContent = "Adresse e-mail confirmée";
+    texte.textContent =
+      "Votre adresse est confirmée. Vous pouvez à présent vous connecter à votre espace Master Professionnel.";
+    action.hidden = false;
+    action.textContent = "Se connecter";
+    action.href = "index.html";
+  }
+}
+</script>
+</body>
+</html>
