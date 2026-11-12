@@ -1,19 +1,5 @@
-# Fichiers temporaires et systèmes
-Thumbs.db
-desktop.ini
-.DS_Store
-_preview*.html
-_preview*.png
-
-# Photos brutes en attente de traitement
-photos-a-trier/*
-!photos-a-trier/LISEZ-MOI.txt
-
-# Dépendances éventuelles
 node_modules/
-__pycache__/
-*.pyc
-
-# Éditeurs
-.vscode/
-.idea/
+dist/
+.DS_Store
+.env
+.env.*
