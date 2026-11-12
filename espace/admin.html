@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Administration — Master Professionnel</title>
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="assets/espace.css">
+</head>
+<body class="app">
+<header class="app-header">
+  <div class="app-header__inner">
+    <a href="../index.html"><img src="../assets/brand/logo-horizontal.svg" alt="Master Professionnel"></a>
+    <span class="app-user app-header__spacer" id="nom-admin">…</span>
+    <a class="btn btn--sm btn--outline" href="espace.html">Mon espace</a>
+    <button class="btn btn--sm btn--outline" type="button" id="deconnexion">Déconnexion</button>
+  </div>
+</header>
+
+<main class="app-main" id="contenu" hidden>
+  <h1 class="app-title" style="font-size:1.7rem">Administration</h1>
+  <p class="app-sub">Suivi des demandes d'inscription du centre.</p>
+
+  <div class="mini-stats">
+    <div class="mini-stat"><b id="stat-total">0</b><span>Demandes reçues</span></div>
+    <div class="mini-stat"><b id="stat-attente">0</b><span>En attente</span></div>
+    <div class="mini-stat"><b id="stat-valide">0</b><span>Validées</span></div>
+  </div>
+
+  <div id="alert" class="alert" hidden></div>
+
+  <section class="app-card">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <h2>Demandes d'inscription</h2>
+      <div class="actions">
+        <select id="filtre" class="btn-mini" style="padding:8px 10px">
+          <option value="tous">Toutes</option>
+          <option value="en_attente">En attente</option>
+          <option value="validee">Validées</option>
+          <option value="refusee">Refusées</option>
+        </select>
+        <button class="btn-mini" type="button" id="export">Exporter en CSV</button>
+      </div>
+    </div>
+    <div class="table-wrap" style="margin-top:16px">
+      <table class="app">
+        <thead><tr><th>Date</th><th>Apprenant</th><th>Filière</th><th>Rythme</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody id="corps"><tr><td colspan="6" class="vide">Chargement…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<main class="app-main" id="refus" hidden>
+  <div class="app-card" style="text-align:center">
+    <h1 class="app-title" style="font-size:1.5rem">Accès réservé</h1>
+    <p class="app-sub">Cette page est réservée aux administrateurs du centre.</p>
+    <a class="btn" href="espace.html">Retour à mon espace</a>
+  </div>
+</main>
+
+<script type="module">
+import { supabase, configured } from "./assets/supabase.js";
+import { $, alerte, dateFr, badgeStatut, echappe, deconnecter } from "./assets/ui.js";
+
+const zone = $("#alert");
+const corps = $("#corps");
+let donnees = [];
+
+if (!configured) alerte(zone, "Clés Supabase manquantes.", "error");
+
+const {
+  data: { session },
+} = await supabase.auth.getSession();
+if (!session) window.location.href = "index.html";
+
+const { data: profil } = await supabase.from("profiles").select("nom, role").eq("id", session.user.id).single();
+if (!profil || profil.role !== "admin") {
+  $("#refus").hidden = false;
+  throw new Error("acces refuse");
+}
+
+$("#contenu").hidden = false;
+$("#nom-admin").textContent = profil.nom || session.user.email;
+$("#deconnexion").addEventListener("click", () => deconnecter(supabase));
+
+async function charger() {
+  const { data, error } = await supabase
+    .from("inscriptions")
+    .select("id, statut, created_at, rythme, message, profiles(nom, telephone, email), formations(nom)")
+    .order("created_at", { ascending: false });
+  if (error) {
+    corps.innerHTML = `<tr><td colspan="6" class="vide">Erreur : ${echappe(error.message)}</td></tr>`;
+    return;
+  }
+  donnees = data || [];
+  const total = donnees.length;
+  const attente = donnees.filter((d) => d.statut === "en_attente").length;
+  const valide = donnees.filter((d) => d.statut === "validee").length;
+  $("#stat-total").textContent = total;
+  $("#stat-attente").textContent = attente;
+  $("#stat-valide").textContent = valide;
+  afficher();
+}
+
+function afficher() {
+  const filtre = $("#filtre").value;
+  const liste = donnees.filter((d) => filtre === "tous" || d.statut === filtre);
+  if (!liste.length) {
+    corps.innerHTML = '<tr><td colspan="6" class="vide">Aucune demande dans cette catégorie.</td></tr>';
+    return;
+  }
+  corps.innerHTML = liste
+    .map((d) => {
+      const p = d.profiles || {};
+      return `<tr>
+        <td>${dateFr(d.created_at)}</td>
+        <td><strong>${echappe(p.nom || "—")}</strong><br><small>${echappe(p.telephone || "")}<br>${echappe(p.email || "")}</small></td>
+        <td>${echappe(d.formations?.nom || "—")}</td>
+        <td>${echappe(d.rythme || "—")}</td>
+        <td>${badgeStatut(d.statut)}</td>
+        <td><div class="actions">
+          <button class="btn-mini btn-mini--ok" data-statut="validee" data-id="${d.id}">Valider</button>
+          <button class="btn-mini btn-mini--ko" data-statut="refusee" data-id="${d.id}">Refuser</button>
+          <button class="btn-mini" data-statut="en_attente" data-id="${d.id}">Remettre en attente</button>
+        </div></td>
+      </tr>`;
+    })
+    .join("");
+}
+
+corps.addEventListener("click", async (e) => {
+  const bouton = e.target.closest("button[data-statut]");
+  if (!bouton) return;
+  const { id, statut } = bouton.dataset;
+  bouton.disabled = true;
+  const { error } = await supabase.from("inscriptions").update({ statut }).eq("id", id);
+  bouton.disabled = false;
+  if (error) return alerte(zone, "Mise à jour impossible : " + error.message, "error");
+  alerte(zone, "Statut mis à jour.", "ok");
+  charger();
+});
+
+$("#filtre").addEventListener("change", afficher);
+
+$("#export").addEventListener("click", () => {
+  const lignes = [["Date", "Nom", "Telephone", "Email", "Filiere", "Rythme", "Statut", "Message"]];
+  donnees.forEach((d) => {
+    const p = d.profiles || {};
+    lignes.push([
+      dateFr(d.created_at),
+      p.nom || "",
+      p.telephone || "",
+      p.email || "",
+      d.formations?.nom || "",
+      d.rythme || "",
+      d.statut,
+      (d.message || "").replace(/\s+/g, " "),
+    ]);
+  });
+  const csv = lignes.map((l) => l.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+  const lien = document.createElement("a");
+  lien.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" }));
+  lien.download = "inscriptions-master-professionnel.csv";
+  lien.click();
+  URL.revokeObjectURL(lien.href);
+});
+
+charger();
+</script>
+</body>
+</html>

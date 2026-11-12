@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mon espace — Master Professionnel</title>
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="assets/espace.css">
+</head>
+<body class="app">
+<header class="app-header">
+  <div class="app-header__inner">
+    <a href="../index.html"><img src="../assets/brand/logo-horizontal.svg" alt="Master Professionnel"></a>
+    <span class="app-user app-header__spacer" id="nom-utilisateur">…</span>
+    <a class="btn btn--sm btn--outline" href="admin.html" id="lien-admin" hidden>Administration</a>
+    <button class="btn btn--sm btn--outline" type="button" id="deconnexion">Déconnexion</button>
+  </div>
+</header>
+
+<main class="app-main">
+  <h1 class="app-title" style="font-size:1.7rem">Bonjour <span id="prenom">…</span></h1>
+  <p class="app-sub">Votre dossier, vos demandes d'inscription et leur suivi.</p>
+
+  <div id="alert" class="alert" hidden></div>
+
+  <section class="app-card">
+    <h2>Mon dossier</h2>
+    <div class="liste" style="margin-top:14px">
+      <div class="ligne"><div><strong id="d-nom">…</strong><small id="d-email">…</small></div><div><small>Statut du compte</small><br><span class="badge badge--validee">Actif</span></div></div>
+      <div class="ligne"><div><strong id="d-tel">…</strong><small>Téléphone / WhatsApp</small></div><div><small>Inscription au centre</small><br><span class="badge badge--attente">2 000 FCFA au dépôt du dossier</span></div></div>
+    </div>
+  </section>
+
+  <section class="app-card">
+    <h2>Nouvelle demande d'inscription</h2>
+    <p class="app-sub" style="margin:6px 0 16px">Choisissez une filière : le centre confirme votre place et la date de session par WhatsApp.</p>
+    <form id="form-inscription" class="form-grid">
+      <div class="field">
+        <label for="formation">Filière souhaitée *</label>
+        <select id="formation" required><option value="">Chargement…</option></select>
+      </div>
+      <div class="field">
+        <label for="rythme">Rythme préféré</label>
+        <select id="rythme">
+          <option value="Jour">Jour</option>
+          <option value="Soir">Soir</option>
+          <option value="Peu importe">Peu importe</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="message">Message (facultatif)</label>
+        <textarea id="message" placeholder="Votre niveau, vos disponibilités, vos questions…"></textarea>
+      </div>
+      <button class="btn" type="submit">Envoyer ma demande</button>
+    </form>
+  </section>
+
+  <section class="app-card">
+    <h2>Mes demandes</h2>
+    <div id="mes-inscriptions" class="liste" style="margin-top:14px">
+      <p class="vide">Chargement…</p>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { supabase, configured } from "./assets/supabase.js";
+import { $, alerte, dateFr, badgeStatut, echappe, deconnecter } from "./assets/ui.js";
+
+const zone = $("#alert");
+if (!configured) {
+  alerte(zone, "Espace en cours de configuration : clés Supabase manquantes.", "error");
+}
+
+const {
+  data: { session },
+} = await supabase.auth.getSession();
+if (!session) window.location.href = "index.html";
+
+const uid = session.user.id;
+let profil = null;
+
+/* Profil */
+{
+  const { data } = await supabase.from("profiles").select("nom, email, telephone, role").eq("id", uid).single();
+  profil = data || { nom: session.user.email, email: session.user.email, role: "apprenant" };
+  $("#nom-utilisateur").textContent = profil.nom || profil.email;
+  $("#prenom").textContent = (profil.nom || "").split(" ")[0] || "";
+  $("#d-nom").textContent = profil.nom || "—";
+  $("#d-email").textContent = profil.email || session.user.email;
+  $("#d-tel").textContent = profil.telephone || "—";
+  if (profil.role === "admin") $("#lien-admin").hidden = false;
+}
+
+$("#deconnexion").addEventListener("click", () => deconnecter(supabase));
+
+/* Catalogue */
+const { data: formations } = await supabase.from("formations").select("id, nom, prix").eq("actif", true).order("nom");
+const select = $("#formation");
+select.innerHTML = '<option value="">Choisir une filière…</option>';
+(formations || []).forEach((f) => {
+  const o = document.createElement("option");
+  o.value = f.id;
+  o.textContent = f.nom + (f.prix ? " — " + f.prix : "");
+  select.appendChild(o);
+});
+
+/* Mes inscriptions */
+async function charger() {
+  const conteneur = $("#mes-inscriptions");
+  const { data, error } = await supabase
+    .from("inscriptions")
+    .select("id, statut, created_at, rythme, message, formations(nom)")
+    .eq("user_id", uid)
+    .order("created_at", { ascending: false });
+  if (error) {
+    conteneur.innerHTML = '<p class="vide">Impossible de charger vos demandes.</p>';
+    return;
+  }
+  if (!data || !data.length) {
+    conteneur.innerHTML = '<p class="vide">Aucune demande pour le moment. Choisissez une filière ci-dessus.</p>';
+    return;
+  }
+  conteneur.innerHTML = data
+    .map(
+      (i) => `<div class="ligne">
+        <div>
+          <strong>${echappe(i.formations?.nom || "Filière")}</strong>
+          <small>Demande du ${dateFr(i.created_at)} · rythme ${echappe(i.rythme || "—")}</small>
+        </div>
+        <div>${badgeStatut(i.statut)}</div>
+      </div>`
+    )
+    .join("");
+}
+charger();
+
+/* Nouvelle demande */
+$("#form-inscription").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const bouton = e.target.querySelector("button");
+  const formationId = select.value;
+  if (!formationId) return alerte(zone, "Choisissez une filière.", "error");
+  bouton.disabled = true;
+  bouton.textContent = "Envoi…";
+  const { error } = await supabase.from("inscriptions").insert({
+    user_id: uid,
+    formation_id: Number(formationId),
+    rythme: $("#rythme").value,
+    message: $("#message").value.trim() || null,
+  });
+  bouton.disabled = false;
+  bouton.textContent = "Envoyer ma demande";
+  if (error) return alerte(zone, "Envoi impossible : " + error.message, "error");
+  alerte(zone, "Demande envoyée. Le centre vous contacte sous 48 h.", "ok");
+  $("#message").value = "";
+  select.value = "";
+  charger();
+});
+</script>
+</body>
+</html>

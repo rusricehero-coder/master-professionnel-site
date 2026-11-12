@@ -1,0 +1,91 @@
+/* ---------- Espace membre : styles complémentaires ---------- */
+body.app { background: var(--bg); min-height: 100vh; }
+
+.app-header {
+  background: #fff; border-bottom: 1px solid var(--line); border-top: 3px solid var(--coral-500);
+}
+.app-header__inner {
+  max-width: 1080px; margin: 0 auto; padding: 14px 20px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.app-header img { height: 38px; width: auto; }
+.app-header__spacer { margin-left: auto; }
+.app-user { font-size: .82rem; font-weight: 650; color: var(--navy-800); }
+.app-main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 72px; }
+.app-title { margin-bottom: 6px; }
+.app-sub { color: var(--muted); font-size: .95rem; margin-bottom: 26px; }
+
+.app-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 26px; box-shadow: var(--shadow-xs); margin-bottom: 20px;
+}
+.app-card h2 { font-size: 1.15rem; margin-bottom: 4px; }
+.app-card h3 { font-size: 1rem; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 22px; background: var(--bg-2); padding: 5px; border-radius: 12px; }
+.tabs button {
+  flex: 1; padding: 10px 14px; border: 0; border-radius: 9px; cursor: pointer;
+  background: transparent; font-weight: 700; font-size: .9rem; color: #3D5070;
+}
+.tabs button.is-active { background: #fff; color: var(--navy-900); box-shadow: var(--shadow-xs); }
+
+.form-grid { display: grid; gap: 14px; }
+.form-grid .field label { font-size: .82rem; font-weight: 700; color: #2C3E5C; }
+.form-grid input, .form-grid select, .form-grid textarea {
+  width: 100%; padding: 12px 14px; border-radius: 11px; border: 1px solid var(--line-2);
+  background: #fff; font: inherit; font-size: .95rem;
+}
+.form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus {
+  outline: none; border-color: var(--blue-500); box-shadow: 0 0 0 4px rgba(46, 114, 245, .14);
+}
+.form-grid textarea { min-height: 90px; resize: vertical; }
+
+.alert {
+  margin-top: 14px; padding: 11px 14px; border-radius: 10px; font-size: .87rem; font-weight: 600;
+}
+.alert--info { background: var(--blue-100); color: var(--blue-600); }
+.alert--error { background: var(--coral-100); color: var(--coral-600); }
+.alert--ok { background: #E4F8EF; color: #0B7A4F; }
+
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: .72rem; font-weight: 800; }
+.badge--attente { background: #FFF3DA; color: #8A5B00; }
+.badge--validee { background: #E4F8EF; color: #0B7A4F; }
+.badge--refusee { background: var(--coral-100); color: var(--coral-600); }
+
+.liste { display: grid; gap: 12px; }
+.ligne {
+  display: flex; gap: 14px; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: #fff; flex-wrap: wrap;
+}
+.ligne strong { display: block; font-size: .95rem; color: var(--navy-900); }
+.ligne small { color: var(--muted); font-size: .8rem; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table.app { width: 100%; border-collapse: collapse; font-size: .86rem; min-width: 760px; }
+table.app th {
+  text-align: left; padding: 11px 12px; background: var(--bg-2); color: #34455F;
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .07em;
+}
+table.app td { padding: 11px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+table.app tr:hover td { background: #FAFCFF; }
+
+.mini-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+.mini-stat { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.mini-stat b { display: block; font-size: 1.6rem; color: var(--coral-600); line-height: 1; }
+.mini-stat span { font-size: .78rem; color: var(--muted); font-weight: 600; }
+
+.vide { text-align: center; padding: 26px; color: var(--muted); font-size: .9rem; }
+
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-mini {
+  padding: 7px 11px; border-radius: 8px; border: 1px solid var(--line-2); background: #fff;
+  font-size: .78rem; font-weight: 700; cursor: pointer; color: var(--navy-800);
+}
+.btn-mini:hover { border-color: var(--blue-500); color: var(--blue-600); }
+.btn-mini--ok:hover { border-color: var(--green); color: var(--green); }
+.btn-mini--ko:hover { border-color: var(--coral-500); color: var(--coral-600); }
+
+@media (max-width: 640px) {
+  .mini-stats { grid-template-columns: 1fr; }
+  .app-card { padding: 20px; }
+}

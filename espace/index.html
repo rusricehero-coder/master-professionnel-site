@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Connexion — Espace apprenant Master Professionnel</title>
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="assets/espace.css">
+</head>
+<body class="app">
+<header class="app-header">
+  <div class="app-header__inner">
+    <a href="../index.html"><img src="../assets/brand/logo-horizontal.svg" alt="Master Professionnel"></a>
+    <a class="btn btn--sm btn--outline app-header__spacer" href="../index.html">← Retour au site</a>
+  </div>
+</header>
+
+<main class="app-main" style="max-width:540px">
+  <h1 class="app-title" style="font-size:1.9rem">Espace apprenant</h1>
+  <p class="app-sub">Créez votre compte pour suivre votre dossier, vos inscriptions et vos cours.</p>
+
+  <div class="app-card">
+    <div class="tabs" role="tablist">
+      <button type="button" id="tab-login" class="is-active" role="tab">Connexion</button>
+      <button type="button" id="tab-signup" role="tab">Créer un compte</button>
+    </div>
+
+    <div id="alert" class="alert" hidden></div>
+
+    <form id="form-login" class="form-grid" novalidate>
+      <div class="field"><label for="l-email">E-mail</label><input id="l-email" type="email" autocomplete="email" required placeholder="vous@exemple.com"></div>
+      <div class="field"><label for="l-pass">Mot de passe</label><input id="l-pass" type="password" autocomplete="current-password" required placeholder="••••••••"></div>
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+
+    <form id="form-signup" class="form-grid" hidden novalidate>
+      <div class="field"><label for="s-nom">Nom et prénoms *</label><input id="s-nom" type="text" autocomplete="name" required placeholder="Votre nom complet"></div>
+      <div class="field"><label for="s-tel">Téléphone / WhatsApp *</label><input id="s-tel" type="tel" autocomplete="tel" required placeholder="+229 …"></div>
+      <div class="field"><label for="s-email">E-mail *</label><input id="s-email" type="email" autocomplete="email" required placeholder="vous@exemple.com"></div>
+      <div class="field"><label for="s-pass">Mot de passe * (8 caractères minimum)</label><input id="s-pass" type="password" autocomplete="new-password" minlength="8" required placeholder="••••••••"></div>
+      <button class="btn" type="submit">Créer mon compte</button>
+    </form>
+  </div>
+
+  <p class="app-sub" style="font-size:.8rem">En créant un compte, vous acceptez notre
+    <a href="../confidentialite.html">politique de confidentialité</a>. Vos données servent uniquement au suivi de votre inscription.</p>
+</main>
+
+<script type="module">
+import { supabase, configured } from "./assets/supabase.js";
+import { $, alerte } from "./assets/ui.js";
+
+const zone = $("#alert");
+const formLogin = $("#form-login");
+const formSignup = $("#form-signup");
+const tabLogin = $("#tab-login");
+const tabSignup = $("#tab-signup");
+
+if (!configured) {
+  alerte(zone, "Espace en cours de configuration : les clés Supabase ne sont pas encore renseignées.", "error");
+}
+
+function messageErreur(err) {
+  const m = (err && err.message) || "";
+  if (/Invalid login credentials/i.test(m)) return "E-mail ou mot de passe incorrect.";
+  if (/Email not confirmed/i.test(m)) return "Confirmez d'abord votre adresse e-mail (lien reçu par mail).";
+  if (/already registered/i.test(m)) return "Un compte existe déjà avec cet e-mail. Connectez-vous.";
+  if (/Password should be at least/i.test(m)) return "Le mot de passe doit contenir au moins 8 caractères.";
+  if (/Unable to validate email/i.test(m)) return "Adresse e-mail invalide.";
+  return m || "Une erreur est survenue. Réessayez.";
+}
+
+function basculer(versInscription) {
+  tabLogin.classList.toggle("is-active", !versInscription);
+  tabSignup.classList.toggle("is-active", versInscription);
+  formLogin.hidden = versInscription;
+  formSignup.hidden = !versInscription;
+  alerte(zone, "", "info");
+}
+tabLogin.addEventListener("click", () => basculer(false));
+tabSignup.addEventListener("click", () => basculer(true));
+
+/* Redirection si déjà connecté */
+if (configured) {
+  supabase.auth.getSession().then(({ data }) => {
+    if (data.session) window.location.href = "espace.html";
+  });
+}
+
+formLogin.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!configured) return;
+  const bouton = formLogin.querySelector("button");
+  bouton.disabled = true;
+  bouton.textContent = "Connexion…";
+  const { error } = await supabase.auth.signInWithPassword({
+    email: $("#l-email").value.trim(),
+    password: $("#l-pass").value,
+  });
+  bouton.disabled = false;
+  bouton.textContent = "Se connecter";
+  if (error) return alerte(zone, messageErreur(error), "error");
+  window.location.href = "espace.html";
+});
+
+formSignup.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!configured) return;
+  const bouton = formSignup.querySelector("button");
+  bouton.disabled = true;
+  bouton.textContent = "Création…";
+  const { data, error } = await supabase.auth.signUp({
+    email: $("#s-email").value.trim(),
+    password: $("#s-pass").value,
+    options: {
+      data: { nom: $("#s-nom").value.trim(), telephone: $("#s-tel").value.trim() },
+    },
+  });
+  bouton.disabled = false;
+  bouton.textContent = "Créer mon compte";
+  if (error) return alerte(zone, messageErreur(error), "error");
+  if (data.session) {
+    window.location.href = "espace.html";
+  } else {
+    alerte(zone, "Compte créé. Vérifiez votre boîte mail : cliquez sur le lien de confirmation, puis revenez vous connecter.", "ok");
+    formSignup.reset();
+  }
+});
+</script>
+</body>
+</html>

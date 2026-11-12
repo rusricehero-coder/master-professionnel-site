@@ -149,6 +149,7 @@ function footer(base) {
           <a href="${base}publications.html">Livres &amp; manuels</a>
           <a href="${base}inscriptions.html">Inscriptions</a>
           <a href="${base}galerie.html">Galerie photos</a>
+          <a href="${base}espace/index.html">Espace apprenant</a>
           ${AVIS.length >= 3 ? `<a href="${base}avis.html">Avis des apprenants</a>` : ""}
           <a href="${base}a-propos.html">À propos</a>
           <a href="${base}contact.html">Contact</a>
@@ -890,6 +891,19 @@ ${pageHead(
   "Les inscriptions sont ouvertes toute l'année. Sessions chaque début de mois, cours du jour ou du soir, en présentiel ou en ligne.",
   `<a href="index.html">Accueil</a> <span>›</span> <span aria-current="page">Inscriptions</span>`
 )}
+<section class="section section--tight">
+  <div class="container">
+    <div class="cta-band" style="padding:26px 32px">
+      <div style="display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div>
+          <h2 style="font-size:1.25rem;max-width:none">Créez votre compte apprenant</h2>
+          <p style="margin-top:6px">Suivez votre dossier en ligne, envoyez vos demandes et recevez les convocations aux cours.</p>
+        </div>
+        <a class="btn" href="espace/index.html">Ouvrir mon espace ${icon("arrow")}</a>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="section">
   <div class="container">
     <div class="steps">
