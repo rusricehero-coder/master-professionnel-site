@@ -48,6 +48,7 @@
       <div class="field"><label for="s-duree">Durée (minutes)</label><input id="s-duree" type="number" min="15" max="240" value="60"></div>
       <button class="btn" type="submit">Créer la session</button>
     </form>
+    <div id="statut-session" class="alert" hidden style="margin-top:14px"></div>
     <div id="liste-sessions" class="liste" style="margin-top:16px"><p class="vide">Chargement…</p></div>
   </section>
 
@@ -83,8 +84,8 @@
 
 <script src="assets/config.js"></script>
 <script type="module">
-import { sessionValide, select, insertion, modification, rpc, deconnexion, messageErreur } from "./assets/api.js?v=10";
-import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=10";
+import { sessionValide, select, insertion, modification, rpc, deconnexion, messageErreur } from "./assets/api.js?v=11";
+import { $, alerte, dateFr, badgeStatut, echappe } from "./assets/ui.js?v=11";
 
 const zone = $("#alert");
 const corps = $("#corps");
@@ -214,6 +215,14 @@ if (!profil || profil.role !== "admin") {
     /* catalogue indisponible : on laisse « Toutes filières » */
   }
 
+  const zoneSession = $("#statut-session");
+  function etatSession(texte, type) {
+    if (!zoneSession) return;
+    zoneSession.textContent = texte;
+    zoneSession.className = "alert alert--" + (type || "info");
+    zoneSession.hidden = !texte;
+  }
+
   async function chargerSessions() {
     const box = $("#liste-sessions");
     try {
@@ -273,12 +282,12 @@ if (!profil || profil.role !== "admin") {
         },
         token
       );
-      alerte(zone, "Session créée.", "ok");
+      etatSession("Session créée. Cliquez sur « Inviter » pour convoquer les apprenants validés de cette filière.", "ok");
       formSession.reset();
       formSession.hidden = true;
       chargerSessions();
     } catch (err) {
-      alerte(zone, messageErreur(err), "error");
+      etatSession(messageErreur(err), "error");
     } finally {
       bouton.disabled = false;
     }
@@ -291,17 +300,22 @@ if (!profil || profil.role !== "admin") {
       if (inviter) {
         inviter.disabled = true;
         const nb = await rpc("inviter_apprenants", { p_session: inviter.dataset.inviter }, token);
-        alerte(zone, nb + " invitation(s) créée(s) pour cette session.", "ok");
+        etatSession(
+          nb > 0
+            ? nb + " invitation(s) créée(s) pour cette session."
+            : "Aucun apprenant à inviter : aucune inscription validée dans la filière de cette session.",
+          nb > 0 ? "ok" : "error"
+        );
         chargerSessions();
       }
       if (annuler) {
         annuler.disabled = true;
         await modification("sessions", "id=eq." + annuler.dataset.annuler, { statut: "annulee" }, token);
-        alerte(zone, "Session annulée.", "ok");
+        etatSession("Session annulée.", "ok");
         chargerSessions();
       }
     } catch (err) {
-      alerte(zone, messageErreur(err), "error");
+      etatSession(messageErreur(err), "error");
     }
   });
 
